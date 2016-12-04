@@ -26,7 +26,9 @@ public class MovieDTO implements Serializable {
 
 
     private Long posterId;
-    
+    private String posterImageContentType;
+    private byte[] posterImage;
+
     public Long getId() {
         return id;
     }
@@ -93,5 +95,21 @@ public class MovieDTO implements Serializable {
             ", originalTitle='" + originalTitle + "'" +
             ", overview='" + overview + "'" +
             '}';
+    }
+
+    public String getPosterImageContentType() {
+        return posterImageContentType;
+    }
+
+    public void setPosterImageContentType(String posterImageContentType) {
+        this.posterImageContentType = posterImageContentType;
+    }
+
+    public byte[] getPosterImage() {
+        return posterImage;
+    }
+
+    public void setPosterImage(byte[] posterImage) {
+        this.posterImage = posterImage;
     }
 }
