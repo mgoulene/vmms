@@ -2,6 +2,8 @@ package com.video.manager.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 
@@ -23,6 +25,8 @@ public class MovieDTO implements Serializable {
     private String overview;
 
 
+    private Long posterId;
+    
     public Long getId() {
         return id;
     }
@@ -50,6 +54,14 @@ public class MovieDTO implements Serializable {
 
     public void setOverview(String overview) {
         this.overview = overview;
+    }
+
+    public Long getPosterId() {
+        return posterId;
+    }
+
+    public void setPosterId(Long pictureId) {
+        this.posterId = pictureId;
     }
 
     @Override

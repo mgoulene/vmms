@@ -37,6 +37,9 @@ public class Movie implements Serializable {
     @Column(name = "overview", length = 40000)
     private String overview;
 
+    @ManyToOne
+    private Picture poster;
+
     public Long getId() {
         return id;
     }
@@ -82,6 +85,19 @@ public class Movie implements Serializable {
 
     public void setOverview(String overview) {
         this.overview = overview;
+    }
+
+    public Picture getPoster() {
+        return poster;
+    }
+
+    public Movie poster(Picture picture) {
+        this.poster = picture;
+        return this;
+    }
+
+    public void setPoster(Picture picture) {
+        this.poster = picture;
     }
 
     @Override

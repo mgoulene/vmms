@@ -1,0 +1,33 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "movie",
+            "otherEntityName": "movie",
+            "otherEntityRelationshipName": "poster"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "legend",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 200
+        },
+        {
+            "fieldName": "image",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "image"
+        }
+    ],
+    "changelogDate": "20161204101213",
+    "entityTableName": "picture",
+    "dto": "mapstruct",
+    "pagination": "infinite-scroll",
+    "service": "serviceImpl",
+    "microserviceName": "vmms",
+    "searchEngine": "elasticsearch"
+}
