@@ -12,9 +12,9 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {})
 public interface MovieMapper {
 
+
+
     @Mapping(source = "poster.id", target = "posterId")
-    @Mapping(source = "poster.image", target = "posterImage")
-    @Mapping(source = "poster.imageContentType", target = "posterImageContentType")
     MovieDTO movieToMovieDTO(Movie movie);
 
     List<MovieDTO> moviesToMovieDTOs(List<Movie> movies);

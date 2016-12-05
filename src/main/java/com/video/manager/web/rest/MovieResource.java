@@ -34,7 +34,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class MovieResource {
 
     private final Logger log = LoggerFactory.getLogger(MovieResource.class);
-        
+
     @Inject
     private MovieService movieService;
 
@@ -92,7 +92,7 @@ public class MovieResource {
     public ResponseEntity<List<MovieDTO>> getAllMovies(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Movies");
-        Page<MovieDTO> page = movieService.findAll(pageable);
+        Page<MovieDTO> page = movieService.findAllWithPoster(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/movies");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -133,7 +133,7 @@ public class MovieResource {
      * SEARCH  /_search/movies?query=:query : search for the movie corresponding
      * to the query.
      *
-     * @param query the query of the movie search 
+     * @param query the query of the movie search
      * @param pageable the pagination information
      * @return the result of the search
      * @throws URISyntaxException if there is an error to generate the pagination HTTP headers

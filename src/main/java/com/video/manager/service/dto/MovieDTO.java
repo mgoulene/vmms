@@ -1,5 +1,7 @@
 package com.video.manager.service.dto;
 
+import com.video.manager.domain.Picture;
+
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -26,8 +28,7 @@ public class MovieDTO implements Serializable {
 
 
     private Long posterId;
-    private String posterImageContentType;
-    private byte[] posterImage;
+    private Picture poster;
 
     public Long getId() {
         return id;
@@ -97,19 +98,11 @@ public class MovieDTO implements Serializable {
             '}';
     }
 
-    public String getPosterImageContentType() {
-        return posterImageContentType;
+    public Picture getPoster() {
+        return poster;
     }
 
-    public void setPosterImageContentType(String posterImageContentType) {
-        this.posterImageContentType = posterImageContentType;
-    }
-
-    public byte[] getPosterImage() {
-        return posterImage;
-    }
-
-    public void setPosterImage(byte[] posterImage) {
-        this.posterImage = posterImage;
+    public void setPoster(Picture poster) {
+        this.poster = poster;
     }
 }

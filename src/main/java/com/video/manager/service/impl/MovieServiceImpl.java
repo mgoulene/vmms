@@ -5,6 +5,7 @@ import com.video.manager.domain.Movie;
 import com.video.manager.repository.MovieRepository;
 import com.video.manager.repository.search.MovieSearchRepository;
 import com.video.manager.service.dto.MovieDTO;
+import com.video.manager.service.mapper.MovieDeepMapper;
 import com.video.manager.service.mapper.MovieMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +30,15 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class MovieServiceImpl implements MovieService{
 
     private final Logger log = LoggerFactory.getLogger(MovieServiceImpl.class);
-    
+
     @Inject
     private MovieRepository movieRepository;
 
     @Inject
     private MovieMapper movieMapper;
+
+    @Inject
+    private MovieDeepMapper movieDeepMapper;
 
     @Inject
     private MovieSearchRepository movieSearchRepository;
@@ -56,11 +60,11 @@ public class MovieServiceImpl implements MovieService{
 
     /**
      *  Get all the movies.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<MovieDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Movies");
         Page<Movie> result = movieRepository.findAll(pageable);
@@ -68,12 +72,26 @@ public class MovieServiceImpl implements MovieService{
     }
 
     /**
+     *  Get all the movies.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<MovieDTO> findAllWithPoster(Pageable pageable) {
+        log.debug("Request to get all Movies");
+        Page<Movie> result = movieRepository.findAll(pageable);
+        return result.map(movie -> movieDeepMapper.movieToMovieDTO(movie));
+    }
+
+
+    /**
      *  Get one movie by id.
      *
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public MovieDTO findOne(Long id) {
         log.debug("Request to get Movie : {}", id);
         Movie movie = movieRepository.findOne(id);
