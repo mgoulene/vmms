@@ -5,7 +5,6 @@ import com.video.manager.domain.Movie;
 import com.video.manager.repository.MovieRepository;
 import com.video.manager.repository.search.MovieSearchRepository;
 import com.video.manager.service.dto.MovieDTO;
-import com.video.manager.service.mapper.MovieDeepMapper;
 import com.video.manager.service.mapper.MovieMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -37,8 +32,6 @@ public class MovieServiceImpl implements MovieService{
     @Inject
     private MovieMapper movieMapper;
 
-    @Inject
-    private MovieDeepMapper movieDeepMapper;
 
     @Inject
     private MovieSearchRepository movieSearchRepository;
@@ -69,19 +62,6 @@ public class MovieServiceImpl implements MovieService{
         log.debug("Request to get all Movies");
         Page<Movie> result = movieRepository.findAll(pageable);
         return result.map(movie -> movieMapper.movieToMovieDTO(movie));
-    }
-
-    /**
-     *  Get all the movies.
-     *
-     *  @param pageable the pagination information
-     *  @return the list of entities
-     */
-    @Transactional(readOnly = true)
-    public Page<MovieDTO> findAllWithPoster(Pageable pageable) {
-        log.debug("Request to get all Movies");
-        Page<Movie> result = movieRepository.findAll(pageable);
-        return result.map(movie -> movieDeepMapper.movieToMovieDTO(movie));
     }
 
 

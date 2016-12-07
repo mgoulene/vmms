@@ -12,7 +12,7 @@ import java.util.List;
  * Mapper for the entity Movie and its DTO MovieDTO.
  */
 @Mapper(componentModel = "spring", uses = {})
-public interface MovieDeepMapper {
+public interface MovieWithPosterMapper {
 
     @Mapping(source = "poster.id", target = "posterId")
     @Mapping(source = "poster", target = "poster")

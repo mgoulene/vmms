@@ -92,7 +92,7 @@ public class MovieResource {
     public ResponseEntity<List<MovieDTO>> getAllMovies(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Movies");
-        Page<MovieDTO> page = movieService.findAllWithPoster(pageable);
+        Page<MovieDTO> page = movieService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/movies");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
