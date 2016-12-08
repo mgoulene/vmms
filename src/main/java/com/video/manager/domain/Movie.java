@@ -33,11 +33,18 @@ public class Movie implements Serializable {
     @Column(name = "original_title", length = 200)
     private String originalTitle;
 
+    @Column(name = "popularity")
+    private Float popularity;
+
+    @Column(name = "release_date")
+    private String releaseDate;
+
     @Size(max = 40000)
     @Column(name = "overview", length = 40000)
     private String overview;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(unique = true)
     private Picture poster;
 
     public Long getId() {
@@ -72,6 +79,32 @@ public class Movie implements Serializable {
 
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
+    }
+
+    public Float getPopularity() {
+        return popularity;
+    }
+
+    public Movie popularity(Float popularity) {
+        this.popularity = popularity;
+        return this;
+    }
+
+    public void setPopularity(Float popularity) {
+        this.popularity = popularity;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public Movie releaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+        return this;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public String getOverview() {
@@ -126,6 +159,8 @@ public class Movie implements Serializable {
             "id=" + id +
             ", title='" + title + "'" +
             ", originalTitle='" + originalTitle + "'" +
+            ", popularity='" + popularity + "'" +
+            ", releaseDate='" + releaseDate + "'" +
             ", overview='" + overview + "'" +
             '}';
     }

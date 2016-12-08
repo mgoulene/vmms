@@ -22,12 +22,11 @@ public interface MovieService {
 
     /**
      *  Get all the movies.
-     *
+     *  
      *  @param pageable the pagination information
      *  @return the list of entities
      */
     Page<MovieDTO> findAll(Pageable pageable);
-
 
     /**
      *  Get the "id" movie.
@@ -48,7 +47,7 @@ public interface MovieService {
      * Search for the movie corresponding to the query.
      *
      *  @param query the query of the search
-     *
+     *  
      *  @param pageable the pagination information
      *  @return the list of entities
      */

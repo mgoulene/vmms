@@ -1,6 +1,5 @@
 package com.video.manager.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -8,9 +7,9 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+
+import com.video.manager.domain.enumeration.PictureType;
 
 /**
  * A Picture.
@@ -27,21 +26,18 @@ public class Picture implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Size(max = 200)
-    @Column(name = "legend", length = 200)
-    private String legend;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private PictureType type;
 
+    @NotNull
     @Lob
-    @Column(name = "image")
+    @Column(name = "image", nullable = false)
     private byte[] image;
 
-    @Column(name = "image_content_type")
+    @Column(name = "image_content_type", nullable = false)
     private String imageContentType;
-
-    @OneToMany(mappedBy = "poster")
-    @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Movie> movies = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -51,17 +47,17 @@ public class Picture implements Serializable {
         this.id = id;
     }
 
-    public String getLegend() {
-        return legend;
+    public PictureType getType() {
+        return type;
     }
 
-    public Picture legend(String legend) {
-        this.legend = legend;
+    public Picture type(PictureType type) {
+        this.type = type;
         return this;
     }
 
-    public void setLegend(String legend) {
-        this.legend = legend;
+    public void setType(PictureType type) {
+        this.type = type;
     }
 
     public byte[] getImage() {
@@ -90,31 +86,6 @@ public class Picture implements Serializable {
         this.imageContentType = imageContentType;
     }
 
-    public Set<Movie> getMovies() {
-        return movies;
-    }
-
-    public Picture movies(Set<Movie> movies) {
-        this.movies = movies;
-        return this;
-    }
-
-    public Picture addMovie(Movie movie) {
-        movies.add(movie);
-        movie.setPoster(this);
-        return this;
-    }
-
-    public Picture removeMovie(Movie movie) {
-        movies.remove(movie);
-        movie.setPoster(null);
-        return this;
-    }
-
-    public void setMovies(Set<Movie> movies) {
-        this.movies = movies;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -139,7 +110,7 @@ public class Picture implements Serializable {
     public String toString() {
         return "Picture{" +
             "id=" + id +
-            ", legend='" + legend + "'" +
+            ", type='" + type + "'" +
             ", image='" + image + "'" +
             ", imageContentType='" + imageContentType + "'" +
             '}';

@@ -16,7 +16,6 @@ public interface PictureMapper {
 
     List<PictureDTO> picturesToPictureDTOs(List<Picture> pictures);
 
-    @Mapping(target = "movies", ignore = true)
     Picture pictureDTOToPicture(PictureDTO pictureDTO);
 
     List<Picture> pictureDTOsToPictures(List<PictureDTO> pictureDTOs);

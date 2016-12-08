@@ -1,7 +1,5 @@
 package com.video.manager.service.dto;
 
-import com.video.manager.domain.Picture;
-
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -23,13 +21,16 @@ public class MovieDTO implements Serializable {
     @Size(max = 200)
     private String originalTitle;
 
+    private Float popularity;
+
+    private String releaseDate;
+
     @Size(max = 40000)
     private String overview;
 
 
     private Long posterId;
-    private Picture poster;
-
+    
     public Long getId() {
         return id;
     }
@@ -50,6 +51,20 @@ public class MovieDTO implements Serializable {
 
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
+    }
+    public Float getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(Float popularity) {
+        this.popularity = popularity;
+    }
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
     public String getOverview() {
         return overview;
@@ -94,15 +109,9 @@ public class MovieDTO implements Serializable {
             "id=" + id +
             ", title='" + title + "'" +
             ", originalTitle='" + originalTitle + "'" +
+            ", popularity='" + popularity + "'" +
+            ", releaseDate='" + releaseDate + "'" +
             ", overview='" + overview + "'" +
             '}';
-    }
-
-    public Picture getPoster() {
-        return poster;
-    }
-
-    public void setPoster(Picture poster) {
-        this.poster = poster;
     }
 }

@@ -14,6 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -25,13 +29,12 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class MovieServiceImpl implements MovieService{
 
     private final Logger log = LoggerFactory.getLogger(MovieServiceImpl.class);
-
+    
     @Inject
     private MovieRepository movieRepository;
 
     @Inject
     private MovieMapper movieMapper;
-
 
     @Inject
     private MovieSearchRepository movieSearchRepository;
@@ -53,17 +56,16 @@ public class MovieServiceImpl implements MovieService{
 
     /**
      *  Get all the movies.
-     *
+     *  
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) 
     public Page<MovieDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Movies");
         Page<Movie> result = movieRepository.findAll(pageable);
         return result.map(movie -> movieMapper.movieToMovieDTO(movie));
     }
-
 
     /**
      *  Get one movie by id.
@@ -71,7 +73,7 @@ public class MovieServiceImpl implements MovieService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) 
     public MovieDTO findOne(Long id) {
         log.debug("Request to get Movie : {}", id);
         Movie movie = movieRepository.findOne(id);

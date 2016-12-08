@@ -12,10 +12,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {})
 public interface MovieMapper {
 
-
-
     @Mapping(source = "poster.id", target = "posterId")
-    @Mapping(target = "poster", ignore = true)
     MovieDTO movieToMovieDTO(Movie movie);
 
     List<MovieDTO> moviesToMovieDTOs(List<Movie> movies);

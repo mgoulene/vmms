@@ -47,6 +47,12 @@ public class MovieResourceIntTest {
     private static final String DEFAULT_ORIGINAL_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_ORIGINAL_TITLE = "BBBBBBBBBB";
 
+    private static final Float DEFAULT_POPULARITY = 1F;
+    private static final Float UPDATED_POPULARITY = 2F;
+
+    private static final String DEFAULT_RELEASE_DATE = "AAAAAAAAAA";
+    private static final String UPDATED_RELEASE_DATE = "BBBBBBBBBB";
+
     private static final String DEFAULT_OVERVIEW = "AAAAAAAAAA";
     private static final String UPDATED_OVERVIEW = "BBBBBBBBBB";
 
@@ -95,6 +101,8 @@ public class MovieResourceIntTest {
         Movie movie = new Movie()
                 .title(DEFAULT_TITLE)
                 .originalTitle(DEFAULT_ORIGINAL_TITLE)
+                .popularity(DEFAULT_POPULARITY)
+                .releaseDate(DEFAULT_RELEASE_DATE)
                 .overview(DEFAULT_OVERVIEW);
         return movie;
     }
@@ -124,6 +132,8 @@ public class MovieResourceIntTest {
         Movie testMovie = movies.get(movies.size() - 1);
         assertThat(testMovie.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testMovie.getOriginalTitle()).isEqualTo(DEFAULT_ORIGINAL_TITLE);
+        assertThat(testMovie.getPopularity()).isEqualTo(DEFAULT_POPULARITY);
+        assertThat(testMovie.getReleaseDate()).isEqualTo(DEFAULT_RELEASE_DATE);
         assertThat(testMovie.getOverview()).isEqualTo(DEFAULT_OVERVIEW);
 
         // Validate the Movie in ElasticSearch
@@ -163,6 +173,8 @@ public class MovieResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(movie.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].originalTitle").value(hasItem(DEFAULT_ORIGINAL_TITLE.toString())))
+            .andExpect(jsonPath("$.[*].popularity").value(hasItem(DEFAULT_POPULARITY.doubleValue())))
+            .andExpect(jsonPath("$.[*].releaseDate").value(hasItem(DEFAULT_RELEASE_DATE.toString())))
             .andExpect(jsonPath("$.[*].overview").value(hasItem(DEFAULT_OVERVIEW.toString())));
     }
 
@@ -179,6 +191,8 @@ public class MovieResourceIntTest {
             .andExpect(jsonPath("$.id").value(movie.getId().intValue()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.originalTitle").value(DEFAULT_ORIGINAL_TITLE.toString()))
+            .andExpect(jsonPath("$.popularity").value(DEFAULT_POPULARITY.doubleValue()))
+            .andExpect(jsonPath("$.releaseDate").value(DEFAULT_RELEASE_DATE.toString()))
             .andExpect(jsonPath("$.overview").value(DEFAULT_OVERVIEW.toString()));
     }
 
@@ -203,6 +217,8 @@ public class MovieResourceIntTest {
         updatedMovie
                 .title(UPDATED_TITLE)
                 .originalTitle(UPDATED_ORIGINAL_TITLE)
+                .popularity(UPDATED_POPULARITY)
+                .releaseDate(UPDATED_RELEASE_DATE)
                 .overview(UPDATED_OVERVIEW);
         MovieDTO movieDTO = movieMapper.movieToMovieDTO(updatedMovie);
 
@@ -217,6 +233,8 @@ public class MovieResourceIntTest {
         Movie testMovie = movies.get(movies.size() - 1);
         assertThat(testMovie.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testMovie.getOriginalTitle()).isEqualTo(UPDATED_ORIGINAL_TITLE);
+        assertThat(testMovie.getPopularity()).isEqualTo(UPDATED_POPULARITY);
+        assertThat(testMovie.getReleaseDate()).isEqualTo(UPDATED_RELEASE_DATE);
         assertThat(testMovie.getOverview()).isEqualTo(UPDATED_OVERVIEW);
 
         // Validate the Movie in ElasticSearch
@@ -260,6 +278,8 @@ public class MovieResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(movie.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].originalTitle").value(hasItem(DEFAULT_ORIGINAL_TITLE.toString())))
+            .andExpect(jsonPath("$.[*].popularity").value(hasItem(DEFAULT_POPULARITY.doubleValue())))
+            .andExpect(jsonPath("$.[*].releaseDate").value(hasItem(DEFAULT_RELEASE_DATE.toString())))
             .andExpect(jsonPath("$.[*].overview").value(hasItem(DEFAULT_OVERVIEW.toString())));
     }
 }

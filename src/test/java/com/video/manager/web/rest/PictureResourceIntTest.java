@@ -33,6 +33,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.video.manager.domain.enumeration.PictureType;
 /**
  * Test class for the PictureResource REST controller.
  *
@@ -42,8 +43,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = VmmsApp.class)
 public class PictureResourceIntTest {
 
-    private static final String DEFAULT_LEGEND = "AAAAAAAAAA";
-    private static final String UPDATED_LEGEND = "BBBBBBBBBB";
+    private static final PictureType DEFAULT_TYPE = PictureType.MOVIE;
+    private static final PictureType UPDATED_TYPE = PictureType.PEOPLE;
 
     private static final byte[] DEFAULT_IMAGE = TestUtil.createByteArray(1, "0");
     private static final byte[] UPDATED_IMAGE = TestUtil.createByteArray(2, "1");
@@ -93,7 +94,7 @@ public class PictureResourceIntTest {
      */
     public static Picture createEntity(EntityManager em) {
         Picture picture = new Picture()
-                .legend(DEFAULT_LEGEND)
+                .type(DEFAULT_TYPE)
                 .image(DEFAULT_IMAGE)
                 .imageContentType(DEFAULT_IMAGE_CONTENT_TYPE);
         return picture;
@@ -122,13 +123,51 @@ public class PictureResourceIntTest {
         List<Picture> pictures = pictureRepository.findAll();
         assertThat(pictures).hasSize(databaseSizeBeforeCreate + 1);
         Picture testPicture = pictures.get(pictures.size() - 1);
-        assertThat(testPicture.getLegend()).isEqualTo(DEFAULT_LEGEND);
+        assertThat(testPicture.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testPicture.getImage()).isEqualTo(DEFAULT_IMAGE);
         assertThat(testPicture.getImageContentType()).isEqualTo(DEFAULT_IMAGE_CONTENT_TYPE);
 
         // Validate the Picture in ElasticSearch
         Picture pictureEs = pictureSearchRepository.findOne(testPicture.getId());
         assertThat(pictureEs).isEqualToComparingFieldByField(testPicture);
+    }
+
+    @Test
+    @Transactional
+    public void checkTypeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = pictureRepository.findAll().size();
+        // set the field null
+        picture.setType(null);
+
+        // Create the Picture, which fails.
+        PictureDTO pictureDTO = pictureMapper.pictureToPictureDTO(picture);
+
+        restPictureMockMvc.perform(post("/api/pictures")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(pictureDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Picture> pictures = pictureRepository.findAll();
+        assertThat(pictures).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkImageIsRequired() throws Exception {
+        int databaseSizeBeforeTest = pictureRepository.findAll().size();
+        // set the field null
+        picture.setImage(null);
+
+        // Create the Picture, which fails.
+        PictureDTO pictureDTO = pictureMapper.pictureToPictureDTO(picture);
+
+        restPictureMockMvc.perform(post("/api/pictures")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(pictureDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Picture> pictures = pictureRepository.findAll();
+        assertThat(pictures).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -142,7 +181,7 @@ public class PictureResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(picture.getId().intValue())))
-            .andExpect(jsonPath("$.[*].legend").value(hasItem(DEFAULT_LEGEND.toString())))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].imageContentType").value(hasItem(DEFAULT_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].image").value(hasItem(Base64Utils.encodeToString(DEFAULT_IMAGE))));
     }
@@ -158,7 +197,7 @@ public class PictureResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(picture.getId().intValue()))
-            .andExpect(jsonPath("$.legend").value(DEFAULT_LEGEND.toString()))
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
             .andExpect(jsonPath("$.imageContentType").value(DEFAULT_IMAGE_CONTENT_TYPE))
             .andExpect(jsonPath("$.image").value(Base64Utils.encodeToString(DEFAULT_IMAGE)));
     }
@@ -182,7 +221,7 @@ public class PictureResourceIntTest {
         // Update the picture
         Picture updatedPicture = pictureRepository.findOne(picture.getId());
         updatedPicture
-                .legend(UPDATED_LEGEND)
+                .type(UPDATED_TYPE)
                 .image(UPDATED_IMAGE)
                 .imageContentType(UPDATED_IMAGE_CONTENT_TYPE);
         PictureDTO pictureDTO = pictureMapper.pictureToPictureDTO(updatedPicture);
@@ -196,7 +235,7 @@ public class PictureResourceIntTest {
         List<Picture> pictures = pictureRepository.findAll();
         assertThat(pictures).hasSize(databaseSizeBeforeUpdate);
         Picture testPicture = pictures.get(pictures.size() - 1);
-        assertThat(testPicture.getLegend()).isEqualTo(UPDATED_LEGEND);
+        assertThat(testPicture.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testPicture.getImage()).isEqualTo(UPDATED_IMAGE);
         assertThat(testPicture.getImageContentType()).isEqualTo(UPDATED_IMAGE_CONTENT_TYPE);
 
@@ -239,7 +278,7 @@ public class PictureResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(picture.getId().intValue())))
-            .andExpect(jsonPath("$.[*].legend").value(hasItem(DEFAULT_LEGEND.toString())))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].imageContentType").value(hasItem(DEFAULT_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].image").value(hasItem(Base64Utils.encodeToString(DEFAULT_IMAGE))));
     }

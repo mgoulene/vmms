@@ -1,22 +1,35 @@
 package com.video.manager.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.video.manager.domain.enumeration.PictureType;
 import com.video.manager.service.MovieService;
+import com.video.manager.service.PictureService;
 import com.video.manager.service.dto.MovieDTO;
+import com.video.manager.service.dto.PictureDTO;
 import com.video.manager.web.rest.util.HeaderUtil;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.TmdbSearch;
+import info.movito.themoviedbapi.Utils;
+import info.movito.themoviedbapi.model.Artwork;
+import info.movito.themoviedbapi.model.ArtworkType;
 import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.MovieImages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +40,8 @@ public class TMDBMovieResource {
     private static String TMDB_KEY = "c344516cac0ae134d50ea9ed99e6a42c";
     @Inject
     private MovieService movieService;
+    @Inject
+    private PictureService pictureService;
 
     /*@GetMapping("/tmdb-movies")
     @Timed
@@ -53,10 +68,48 @@ public class TMDBMovieResource {
     @Timed
     public ResponseEntity<MovieDTO> importTMDBMovie(@PathVariable Long id) throws URISyntaxException{
         log.debug("REST request to get TMDBMovie : {}", id);
-        TmdbMovies tmdbMovies = new TmdbApi(TMDB_KEY).getMovies();
+        TmdbApi tmdbApi = new TmdbApi(TMDB_KEY);
+        TmdbMovies tmdbMovies = tmdbApi.getMovies();
         MovieDb movieDb = tmdbMovies.getMovie(id.intValue(), "fr");
         MovieDTO movieDTO = new MovieDTO();
         movieDTO.setTitle(movieDb.getTitle());
+        movieDTO.setPopularity(movieDb.getPopularity());
+        MovieImages movieImages = tmdbMovies.getImages(movieDb.getId(),"fr");
+        URL imageURL = Utils.createImageUrl(tmdbApi, movieImages.getPosters().get(0).getFilePath(), "original");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream is = null;
+        byte[] posterData = null;
+        try {
+            is = imageURL.openStream ();
+            byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+            int n;
+
+            while ( (n = is.read(byteChunk)) > 0 ) {
+                baos.write(byteChunk, 0, n);
+            }
+            posterData = baos.toByteArray();
+            PictureDTO pictureDTO = new PictureDTO();
+            pictureDTO.setImage(posterData);
+            pictureDTO.setImageContentType(MimeTypeUtils.IMAGE_JPEG.getType());
+            pictureDTO.setType(PictureType.MOVIE);
+            PictureDTO pictureSaved = pictureService.save(pictureDTO);
+            movieDTO.setPosterId(pictureSaved.getId());
+
+        }
+        catch (IOException e) {
+            System.err.printf ("Failed while reading bytes from %s: %s", imageURL.toExternalForm(), e.getMessage());
+            e.printStackTrace ();
+            // Perform any other exception handling that's appropriate.
+        }
+        finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         movieDTO.setOriginalTitle(movieDb.getOriginalTitle());
         movieDTO.setOverview(movieDb.getOverview());
         MovieDTO result = movieService.save(movieDTO);

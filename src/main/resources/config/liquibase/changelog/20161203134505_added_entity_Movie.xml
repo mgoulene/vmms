@@ -29,14 +29,20 @@
                 <constraints nullable="true" />
             </column>
             
-            <column name="overview" type="varchar(40000)">
+            <column name="popularity" type="${floatType}">
                 <constraints nullable="true" />
             </column>
             
-            <column name="poster_id" type="bigint">
+            <column name="release_date" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-
+            
+            <column name="overview" type="varchar(40000)">
+                <constraints nullable="true" />
+            </column>
+                        <column name="poster_id" type="bigint">
+                <constraints unique="true" nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         

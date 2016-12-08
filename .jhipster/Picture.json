@@ -1,26 +1,22 @@
 {
     "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipType": "one-to-many",
-            "relationshipName": "movie",
-            "otherEntityName": "movie",
-            "otherEntityRelationshipName": "poster"
-        }
-    ],
+    "relationships": [],
     "fields": [
         {
-            "fieldName": "legend",
-            "fieldType": "String",
+            "fieldName": "type",
+            "fieldType": "PictureType",
+            "fieldValues": "MOVIE,PEOPLE",
             "fieldValidateRules": [
-                "maxlength"
-            ],
-            "fieldValidateRulesMaxlength": 200
+                "required"
+            ]
         },
         {
             "fieldName": "image",
             "fieldType": "byte[]",
-            "fieldTypeBlobContent": "image"
+            "fieldTypeBlobContent": "image",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "changelogDate": "20161204101213",

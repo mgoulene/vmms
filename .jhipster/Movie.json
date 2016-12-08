@@ -2,10 +2,12 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipType": "many-to-one",
+            "relationshipType": "one-to-one",
             "relationshipName": "poster",
             "otherEntityName": "picture",
-            "otherEntityField": "id"
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "movie"
         }
     ],
     "fields": [
@@ -25,6 +27,14 @@
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": 200
+        },
+        {
+            "fieldName": "popularity",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "releaseDate",
+            "fieldType": "String"
         },
         {
             "fieldName": "overview",

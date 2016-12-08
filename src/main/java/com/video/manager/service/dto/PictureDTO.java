@@ -2,11 +2,10 @@ package com.video.manager.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Lob;
 
+import com.video.manager.domain.enumeration.PictureType;
 
 /**
  * A DTO for the Picture entity.
@@ -15,9 +14,10 @@ public class PictureDTO implements Serializable {
 
     private Long id;
 
-    @Size(max = 200)
-    private String legend;
+    @NotNull
+    private PictureType type;
 
+    @NotNull
     @Lob
     private byte[] image;
 
@@ -30,12 +30,12 @@ public class PictureDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getLegend() {
-        return legend;
+    public PictureType getType() {
+        return type;
     }
 
-    public void setLegend(String legend) {
-        this.legend = legend;
+    public void setType(PictureType type) {
+        this.type = type;
     }
     public byte[] getImage() {
         return image;
@@ -78,7 +78,7 @@ public class PictureDTO implements Serializable {
     public String toString() {
         return "PictureDTO{" +
             "id=" + id +
-            ", legend='" + legend + "'" +
+            ", type='" + type + "'" +
             ", image='" + image + "'" +
             '}';
     }
