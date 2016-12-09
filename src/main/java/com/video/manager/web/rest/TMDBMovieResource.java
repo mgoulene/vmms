@@ -11,10 +11,11 @@ import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.TmdbSearch;
 import info.movito.themoviedbapi.Utils;
-import info.movito.themoviedbapi.model.Artwork;
-import info.movito.themoviedbapi.model.ArtworkType;
-import info.movito.themoviedbapi.model.MovieDb;
-import info.movito.themoviedbapi.model.MovieImages;
+import info.movito.themoviedbapi.model.*;
+import info.movito.themoviedbapi.model.people.PersonCast;
+import info.movito.themoviedbapi.model.people.PersonCredit;
+import info.movito.themoviedbapi.model.people.PersonCrew;
+import info.movito.themoviedbapi.model.people.PersonPeople;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -74,6 +75,13 @@ public class TMDBMovieResource {
         MovieDTO movieDTO = new MovieDTO();
         movieDTO.setTitle(movieDb.getTitle());
         movieDTO.setPopularity(movieDb.getPopularity());
+        List<PersonCast> casts =  movieDb.getCast();
+        List<PersonCrew> crew = movieDb.getCrew();
+        Credits credits = tmdbMovies.getCredits(id.intValue());
+        for (int i=0; i<credits.getCast().size(); i++) {
+            PersonPeople person = tmdbApi.getPeople().getPersonInfo(credits.getCast().get(i).getId());
+            System.out.println(person.getCharacter());
+        }
         MovieImages movieImages = tmdbMovies.getImages(movieDb.getId(),"fr");
         URL imageURL = Utils.createImageUrl(tmdbApi, movieImages.getPosters().get(0).getFilePath(), "original");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
