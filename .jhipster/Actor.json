@@ -1,0 +1,40 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "person",
+            "otherEntityName": "person",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "actor"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "movieActror",
+            "otherEntityName": "movie",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "actor"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "actorOrder",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "actorCharacter",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20161210132533",
+    "entityTableName": "actor",
+    "dto": "mapstruct",
+    "pagination": "infinite-scroll",
+    "service": "serviceImpl",
+    "microserviceName": "vmms",
+    "searchEngine": "elasticsearch"
+}

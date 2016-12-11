@@ -4,5 +4,5 @@ package com.video.manager.domain.enumeration;
  * The PictureType enumeration.
  */
 public enum PictureType {
-    MOVIE,PEOPLE
+    POSTER_MOVIE,ARTWORK,PEOPLE
 }

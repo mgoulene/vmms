@@ -76,7 +76,7 @@ public class MovieServiceImpl implements MovieService{
     @Transactional(readOnly = true) 
     public MovieDTO findOne(Long id) {
         log.debug("Request to get Movie : {}", id);
-        Movie movie = movieRepository.findOne(id);
+        Movie movie = movieRepository.findOneWithEagerRelationships(id);
         MovieDTO movieDTO = movieMapper.movieToMovieDTO(movie);
         return movieDTO;
     }

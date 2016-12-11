@@ -8,6 +8,38 @@
             "otherEntityField": "id",
             "ownerSide": true,
             "otherEntityRelationshipName": "movie"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "backdrop",
+            "otherEntityName": "picture",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "movie"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "genre",
+            "otherEntityName": "genre",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "movie"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "movieActror",
+            "relationshipName": "actor",
+            "otherEntityName": "actor",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "",
+            "relationshipName": "artwork",
+            "otherEntityName": "picture",
+            "otherEntityField": "id",
+            "ownerSide": true
         }
     ],
     "fields": [
@@ -29,10 +61,6 @@
             "fieldValidateRulesMaxlength": 200
         },
         {
-            "fieldName": "popularity",
-            "fieldType": "Float"
-        },
-        {
             "fieldName": "releaseDate",
             "fieldType": "String"
         },
@@ -43,9 +71,43 @@
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": 40000
+        },
+        {
+            "fieldName": "homepage",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 400
+        },
+        {
+            "fieldName": "budget",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "revenue",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "runtime",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "voteRating",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": 0,
+            "fieldValidateRulesMax": 10
+        },
+        {
+            "fieldName": "voteCount",
+            "fieldType": "Integer"
         }
     ],
-    "changelogDate": "20161203134505",
+    "changelogDate": "20161210132530",
     "entityTableName": "movie",
     "dto": "mapstruct",
     "pagination": "infinite-scroll",

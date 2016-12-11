@@ -16,7 +16,7 @@
     <!--
         Added the entity Picture.
     -->
-    <changeSet id="20161204101213-1" author="jhipster">
+    <changeSet id="20161210132531-1" author="jhipster">
         <createTable tableName="picture">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>

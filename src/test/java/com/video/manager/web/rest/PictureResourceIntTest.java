@@ -43,8 +43,8 @@ import com.video.manager.domain.enumeration.PictureType;
 @SpringBootTest(classes = VmmsApp.class)
 public class PictureResourceIntTest {
 
-    private static final PictureType DEFAULT_TYPE = PictureType.MOVIE;
-    private static final PictureType UPDATED_TYPE = PictureType.PEOPLE;
+    private static final PictureType DEFAULT_TYPE = PictureType.POSTER_MOVIE;
+    private static final PictureType UPDATED_TYPE = PictureType.ARTWORK;
 
     private static final byte[] DEFAULT_IMAGE = TestUtil.createByteArray(1, "0");
     private static final byte[] UPDATED_IMAGE = TestUtil.createByteArray(2, "1");

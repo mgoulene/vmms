@@ -4,15 +4,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
     <!--
-        Added the constraints for entity Movie.
+        Added the constraints for entity Actor.
     -->
-    <changeSet id="20161203134505-2" author="jhipster">
+    <changeSet id="20161210132533-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="poster_id"
-                                 baseTableName="movie"
-                                 constraintName="fk_movie_poster_id"
+        <addForeignKeyConstraint baseColumnNames="person_id"
+                                 baseTableName="actor"
+                                 constraintName="fk_actor_person_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="picture"/>
+                                 referencedTableName="person"/>
 
     </changeSet>
 </databaseChangeLog>

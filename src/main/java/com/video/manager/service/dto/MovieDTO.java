@@ -21,16 +21,37 @@ public class MovieDTO implements Serializable {
     @Size(max = 200)
     private String originalTitle;
 
-    private Float popularity;
-
     private String releaseDate;
 
     @Size(max = 40000)
     private String overview;
 
+    @Size(max = 400)
+    private String homepage;
+
+    private Long budget;
+
+    private Long revenue;
+
+    private Integer runtime;
+
+    @DecimalMin(value = "0")
+    @DecimalMax(value = "10")
+    private Float voteRating;
+
+    private Integer voteCount;
+
 
     private Long posterId;
     
+    private Long backdropId;
+    
+    private Long genreId;
+    
+    private Set<ActorDTO> actors = new HashSet<>();
+
+    private Set<PictureDTO> artworks = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -52,13 +73,6 @@ public class MovieDTO implements Serializable {
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
     }
-    public Float getPopularity() {
-        return popularity;
-    }
-
-    public void setPopularity(Float popularity) {
-        this.popularity = popularity;
-    }
     public String getReleaseDate() {
         return releaseDate;
     }
@@ -73,6 +87,48 @@ public class MovieDTO implements Serializable {
     public void setOverview(String overview) {
         this.overview = overview;
     }
+    public String getHomepage() {
+        return homepage;
+    }
+
+    public void setHomepage(String homepage) {
+        this.homepage = homepage;
+    }
+    public Long getBudget() {
+        return budget;
+    }
+
+    public void setBudget(Long budget) {
+        this.budget = budget;
+    }
+    public Long getRevenue() {
+        return revenue;
+    }
+
+    public void setRevenue(Long revenue) {
+        this.revenue = revenue;
+    }
+    public Integer getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(Integer runtime) {
+        this.runtime = runtime;
+    }
+    public Float getVoteRating() {
+        return voteRating;
+    }
+
+    public void setVoteRating(Float voteRating) {
+        this.voteRating = voteRating;
+    }
+    public Integer getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(Integer voteCount) {
+        this.voteCount = voteCount;
+    }
 
     public Long getPosterId() {
         return posterId;
@@ -80,6 +136,38 @@ public class MovieDTO implements Serializable {
 
     public void setPosterId(Long pictureId) {
         this.posterId = pictureId;
+    }
+
+    public Long getBackdropId() {
+        return backdropId;
+    }
+
+    public void setBackdropId(Long pictureId) {
+        this.backdropId = pictureId;
+    }
+
+    public Long getGenreId() {
+        return genreId;
+    }
+
+    public void setGenreId(Long genreId) {
+        this.genreId = genreId;
+    }
+
+    public Set<ActorDTO> getActors() {
+        return actors;
+    }
+
+    public void setActors(Set<ActorDTO> actors) {
+        this.actors = actors;
+    }
+
+    public Set<PictureDTO> getArtworks() {
+        return artworks;
+    }
+
+    public void setArtworks(Set<PictureDTO> pictures) {
+        this.artworks = pictures;
     }
 
     @Override
@@ -109,9 +197,14 @@ public class MovieDTO implements Serializable {
             "id=" + id +
             ", title='" + title + "'" +
             ", originalTitle='" + originalTitle + "'" +
-            ", popularity='" + popularity + "'" +
             ", releaseDate='" + releaseDate + "'" +
             ", overview='" + overview + "'" +
+            ", homepage='" + homepage + "'" +
+            ", budget='" + budget + "'" +
+            ", revenue='" + revenue + "'" +
+            ", runtime='" + runtime + "'" +
+            ", voteRating='" + voteRating + "'" +
+            ", voteCount='" + voteCount + "'" +
             '}';
     }
 }
