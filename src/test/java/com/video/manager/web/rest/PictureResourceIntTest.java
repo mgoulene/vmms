@@ -120,9 +120,9 @@ public class PictureResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Picture in the database
-        List<Picture> pictures = pictureRepository.findAll();
-        assertThat(pictures).hasSize(databaseSizeBeforeCreate + 1);
-        Picture testPicture = pictures.get(pictures.size() - 1);
+        List<Picture> pictureList = pictureRepository.findAll();
+        assertThat(pictureList).hasSize(databaseSizeBeforeCreate + 1);
+        Picture testPicture = pictureList.get(pictureList.size() - 1);
         assertThat(testPicture.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testPicture.getImage()).isEqualTo(DEFAULT_IMAGE);
         assertThat(testPicture.getImageContentType()).isEqualTo(DEFAULT_IMAGE_CONTENT_TYPE);
@@ -130,6 +130,27 @@ public class PictureResourceIntTest {
         // Validate the Picture in ElasticSearch
         Picture pictureEs = pictureSearchRepository.findOne(testPicture.getId());
         assertThat(pictureEs).isEqualToComparingFieldByField(testPicture);
+    }
+
+    @Test
+    @Transactional
+    public void createPictureWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = pictureRepository.findAll().size();
+
+        // Create the Picture with an existing ID
+        Picture existingPicture = new Picture();
+        existingPicture.setId(1L);
+        PictureDTO existingPictureDTO = pictureMapper.pictureToPictureDTO(existingPicture);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restPictureMockMvc.perform(post("/api/pictures")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(existingPictureDTO)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Alice in the database
+        List<Picture> pictureList = pictureRepository.findAll();
+        assertThat(pictureList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -147,8 +168,8 @@ public class PictureResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(pictureDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Picture> pictures = pictureRepository.findAll();
-        assertThat(pictures).hasSize(databaseSizeBeforeTest);
+        List<Picture> pictureList = pictureRepository.findAll();
+        assertThat(pictureList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -166,8 +187,8 @@ public class PictureResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(pictureDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Picture> pictures = pictureRepository.findAll();
-        assertThat(pictures).hasSize(databaseSizeBeforeTest);
+        List<Picture> pictureList = pictureRepository.findAll();
+        assertThat(pictureList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -176,7 +197,7 @@ public class PictureResourceIntTest {
         // Initialize the database
         pictureRepository.saveAndFlush(picture);
 
-        // Get all the pictures
+        // Get all the pictureList
         restPictureMockMvc.perform(get("/api/pictures?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -232,9 +253,9 @@ public class PictureResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the Picture in the database
-        List<Picture> pictures = pictureRepository.findAll();
-        assertThat(pictures).hasSize(databaseSizeBeforeUpdate);
-        Picture testPicture = pictures.get(pictures.size() - 1);
+        List<Picture> pictureList = pictureRepository.findAll();
+        assertThat(pictureList).hasSize(databaseSizeBeforeUpdate);
+        Picture testPicture = pictureList.get(pictureList.size() - 1);
         assertThat(testPicture.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testPicture.getImage()).isEqualTo(UPDATED_IMAGE);
         assertThat(testPicture.getImageContentType()).isEqualTo(UPDATED_IMAGE_CONTENT_TYPE);
@@ -242,6 +263,25 @@ public class PictureResourceIntTest {
         // Validate the Picture in ElasticSearch
         Picture pictureEs = pictureSearchRepository.findOne(testPicture.getId());
         assertThat(pictureEs).isEqualToComparingFieldByField(testPicture);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingPicture() throws Exception {
+        int databaseSizeBeforeUpdate = pictureRepository.findAll().size();
+
+        // Create the Picture
+        PictureDTO pictureDTO = pictureMapper.pictureToPictureDTO(picture);
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restPictureMockMvc.perform(put("/api/pictures")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(pictureDTO)))
+            .andExpect(status().isCreated());
+
+        // Validate the Picture in the database
+        List<Picture> pictureList = pictureRepository.findAll();
+        assertThat(pictureList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
@@ -262,8 +302,8 @@ public class PictureResourceIntTest {
         assertThat(pictureExistsInEs).isFalse();
 
         // Validate the database is empty
-        List<Picture> pictures = pictureRepository.findAll();
-        assertThat(pictures).hasSize(databaseSizeBeforeDelete - 1);
+        List<Picture> pictureList = pictureRepository.findAll();
+        assertThat(pictureList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test
