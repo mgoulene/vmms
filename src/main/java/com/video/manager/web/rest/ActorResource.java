@@ -5,6 +5,8 @@ import com.video.manager.service.ActorService;
 import com.video.manager.web.rest.util.HeaderUtil;
 import com.video.manager.web.rest.util.PaginationUtil;
 import com.video.manager.service.dto.ActorDTO;
+
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -89,7 +91,7 @@ public class ActorResource {
      */
     @GetMapping("/actors")
     @Timed
-    public ResponseEntity<List<ActorDTO>> getAllActors(Pageable pageable)
+    public ResponseEntity<List<ActorDTO>> getAllActors(@ApiParam Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Actors");
         Page<ActorDTO> page = actorService.findAll(pageable);
@@ -140,7 +142,7 @@ public class ActorResource {
      */
     @GetMapping("/_search/actors")
     @Timed
-    public ResponseEntity<List<ActorDTO>> searchActors(@RequestParam String query, Pageable pageable)
+    public ResponseEntity<List<ActorDTO>> searchActors(@RequestParam String query, @ApiParam Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to search for a page of Actors for query {}", query);
         Page<ActorDTO> page = actorService.search(query, pageable);

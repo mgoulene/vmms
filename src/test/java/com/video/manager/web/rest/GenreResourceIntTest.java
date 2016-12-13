@@ -111,14 +111,35 @@ public class GenreResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Genre in the database
-        List<Genre> genres = genreRepository.findAll();
-        assertThat(genres).hasSize(databaseSizeBeforeCreate + 1);
-        Genre testGenre = genres.get(genres.size() - 1);
+        List<Genre> genreList = genreRepository.findAll();
+        assertThat(genreList).hasSize(databaseSizeBeforeCreate + 1);
+        Genre testGenre = genreList.get(genreList.size() - 1);
         assertThat(testGenre.getName()).isEqualTo(DEFAULT_NAME);
 
         // Validate the Genre in ElasticSearch
         Genre genreEs = genreSearchRepository.findOne(testGenre.getId());
         assertThat(genreEs).isEqualToComparingFieldByField(testGenre);
+    }
+
+    @Test
+    @Transactional
+    public void createGenreWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = genreRepository.findAll().size();
+
+        // Create the Genre with an existing ID
+        Genre existingGenre = new Genre();
+        existingGenre.setId(1L);
+        GenreDTO existingGenreDTO = genreMapper.genreToGenreDTO(existingGenre);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restGenreMockMvc.perform(post("/api/genres")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(existingGenreDTO)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Alice in the database
+        List<Genre> genreList = genreRepository.findAll();
+        assertThat(genreList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -136,8 +157,8 @@ public class GenreResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(genreDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Genre> genres = genreRepository.findAll();
-        assertThat(genres).hasSize(databaseSizeBeforeTest);
+        List<Genre> genreList = genreRepository.findAll();
+        assertThat(genreList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -146,7 +167,7 @@ public class GenreResourceIntTest {
         // Initialize the database
         genreRepository.saveAndFlush(genre);
 
-        // Get all the genres
+        // Get all the genreList
         restGenreMockMvc.perform(get("/api/genres?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -196,14 +217,33 @@ public class GenreResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the Genre in the database
-        List<Genre> genres = genreRepository.findAll();
-        assertThat(genres).hasSize(databaseSizeBeforeUpdate);
-        Genre testGenre = genres.get(genres.size() - 1);
+        List<Genre> genreList = genreRepository.findAll();
+        assertThat(genreList).hasSize(databaseSizeBeforeUpdate);
+        Genre testGenre = genreList.get(genreList.size() - 1);
         assertThat(testGenre.getName()).isEqualTo(UPDATED_NAME);
 
         // Validate the Genre in ElasticSearch
         Genre genreEs = genreSearchRepository.findOne(testGenre.getId());
         assertThat(genreEs).isEqualToComparingFieldByField(testGenre);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingGenre() throws Exception {
+        int databaseSizeBeforeUpdate = genreRepository.findAll().size();
+
+        // Create the Genre
+        GenreDTO genreDTO = genreMapper.genreToGenreDTO(genre);
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restGenreMockMvc.perform(put("/api/genres")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(genreDTO)))
+            .andExpect(status().isCreated());
+
+        // Validate the Genre in the database
+        List<Genre> genreList = genreRepository.findAll();
+        assertThat(genreList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
@@ -224,8 +264,8 @@ public class GenreResourceIntTest {
         assertThat(genreExistsInEs).isFalse();
 
         // Validate the database is empty
-        List<Genre> genres = genreRepository.findAll();
-        assertThat(genres).hasSize(databaseSizeBeforeDelete - 1);
+        List<Genre> genreList = genreRepository.findAll();
+        assertThat(genreList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test

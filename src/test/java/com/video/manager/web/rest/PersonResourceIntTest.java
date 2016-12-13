@@ -129,9 +129,9 @@ public class PersonResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Person in the database
-        List<Person> people = personRepository.findAll();
-        assertThat(people).hasSize(databaseSizeBeforeCreate + 1);
-        Person testPerson = people.get(people.size() - 1);
+        List<Person> personList = personRepository.findAll();
+        assertThat(personList).hasSize(databaseSizeBeforeCreate + 1);
+        Person testPerson = personList.get(personList.size() - 1);
         assertThat(testPerson.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testPerson.getBiography()).isEqualTo(DEFAULT_BIOGRAPHY);
         assertThat(testPerson.getBirthday()).isEqualTo(DEFAULT_BIRTHDAY);
@@ -141,6 +141,27 @@ public class PersonResourceIntTest {
         // Validate the Person in ElasticSearch
         Person personEs = personSearchRepository.findOne(testPerson.getId());
         assertThat(personEs).isEqualToComparingFieldByField(testPerson);
+    }
+
+    @Test
+    @Transactional
+    public void createPersonWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = personRepository.findAll().size();
+
+        // Create the Person with an existing ID
+        Person existingPerson = new Person();
+        existingPerson.setId(1L);
+        PersonDTO existingPersonDTO = personMapper.personToPersonDTO(existingPerson);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restPersonMockMvc.perform(post("/api/people")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(existingPersonDTO)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Alice in the database
+        List<Person> personList = personRepository.findAll();
+        assertThat(personList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -158,8 +179,8 @@ public class PersonResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(personDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Person> people = personRepository.findAll();
-        assertThat(people).hasSize(databaseSizeBeforeTest);
+        List<Person> personList = personRepository.findAll();
+        assertThat(personList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -168,7 +189,7 @@ public class PersonResourceIntTest {
         // Initialize the database
         personRepository.saveAndFlush(person);
 
-        // Get all the people
+        // Get all the personList
         restPersonMockMvc.perform(get("/api/people?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -230,9 +251,9 @@ public class PersonResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the Person in the database
-        List<Person> people = personRepository.findAll();
-        assertThat(people).hasSize(databaseSizeBeforeUpdate);
-        Person testPerson = people.get(people.size() - 1);
+        List<Person> personList = personRepository.findAll();
+        assertThat(personList).hasSize(databaseSizeBeforeUpdate);
+        Person testPerson = personList.get(personList.size() - 1);
         assertThat(testPerson.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testPerson.getBiography()).isEqualTo(UPDATED_BIOGRAPHY);
         assertThat(testPerson.getBirthday()).isEqualTo(UPDATED_BIRTHDAY);
@@ -242,6 +263,25 @@ public class PersonResourceIntTest {
         // Validate the Person in ElasticSearch
         Person personEs = personSearchRepository.findOne(testPerson.getId());
         assertThat(personEs).isEqualToComparingFieldByField(testPerson);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingPerson() throws Exception {
+        int databaseSizeBeforeUpdate = personRepository.findAll().size();
+
+        // Create the Person
+        PersonDTO personDTO = personMapper.personToPersonDTO(person);
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restPersonMockMvc.perform(put("/api/people")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(personDTO)))
+            .andExpect(status().isCreated());
+
+        // Validate the Person in the database
+        List<Person> personList = personRepository.findAll();
+        assertThat(personList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
@@ -262,8 +302,8 @@ public class PersonResourceIntTest {
         assertThat(personExistsInEs).isFalse();
 
         // Validate the database is empty
-        List<Person> people = personRepository.findAll();
-        assertThat(people).hasSize(databaseSizeBeforeDelete - 1);
+        List<Person> personList = personRepository.findAll();
+        assertThat(personList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test

@@ -147,9 +147,9 @@ public class MovieResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Movie in the database
-        List<Movie> movies = movieRepository.findAll();
-        assertThat(movies).hasSize(databaseSizeBeforeCreate + 1);
-        Movie testMovie = movies.get(movies.size() - 1);
+        List<Movie> movieList = movieRepository.findAll();
+        assertThat(movieList).hasSize(databaseSizeBeforeCreate + 1);
+        Movie testMovie = movieList.get(movieList.size() - 1);
         assertThat(testMovie.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testMovie.getOriginalTitle()).isEqualTo(DEFAULT_ORIGINAL_TITLE);
         assertThat(testMovie.getReleaseDate()).isEqualTo(DEFAULT_RELEASE_DATE);
@@ -168,6 +168,27 @@ public class MovieResourceIntTest {
 
     @Test
     @Transactional
+    public void createMovieWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = movieRepository.findAll().size();
+
+        // Create the Movie with an existing ID
+        Movie existingMovie = new Movie();
+        existingMovie.setId(1L);
+        MovieDTO existingMovieDTO = movieMapper.movieToMovieDTO(existingMovie);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restMovieMockMvc.perform(post("/api/movies")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(existingMovieDTO)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Alice in the database
+        List<Movie> movieList = movieRepository.findAll();
+        assertThat(movieList).hasSize(databaseSizeBeforeCreate);
+    }
+
+    @Test
+    @Transactional
     public void checkTitleIsRequired() throws Exception {
         int databaseSizeBeforeTest = movieRepository.findAll().size();
         // set the field null
@@ -181,8 +202,8 @@ public class MovieResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(movieDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Movie> movies = movieRepository.findAll();
-        assertThat(movies).hasSize(databaseSizeBeforeTest);
+        List<Movie> movieList = movieRepository.findAll();
+        assertThat(movieList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -191,7 +212,7 @@ public class MovieResourceIntTest {
         // Initialize the database
         movieRepository.saveAndFlush(movie);
 
-        // Get all the movies
+        // Get all the movieList
         restMovieMockMvc.perform(get("/api/movies?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -268,9 +289,9 @@ public class MovieResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the Movie in the database
-        List<Movie> movies = movieRepository.findAll();
-        assertThat(movies).hasSize(databaseSizeBeforeUpdate);
-        Movie testMovie = movies.get(movies.size() - 1);
+        List<Movie> movieList = movieRepository.findAll();
+        assertThat(movieList).hasSize(databaseSizeBeforeUpdate);
+        Movie testMovie = movieList.get(movieList.size() - 1);
         assertThat(testMovie.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testMovie.getOriginalTitle()).isEqualTo(UPDATED_ORIGINAL_TITLE);
         assertThat(testMovie.getReleaseDate()).isEqualTo(UPDATED_RELEASE_DATE);
@@ -285,6 +306,25 @@ public class MovieResourceIntTest {
         // Validate the Movie in ElasticSearch
         Movie movieEs = movieSearchRepository.findOne(testMovie.getId());
         assertThat(movieEs).isEqualToComparingFieldByField(testMovie);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingMovie() throws Exception {
+        int databaseSizeBeforeUpdate = movieRepository.findAll().size();
+
+        // Create the Movie
+        MovieDTO movieDTO = movieMapper.movieToMovieDTO(movie);
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restMovieMockMvc.perform(put("/api/movies")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(movieDTO)))
+            .andExpect(status().isCreated());
+
+        // Validate the Movie in the database
+        List<Movie> movieList = movieRepository.findAll();
+        assertThat(movieList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
@@ -305,8 +345,8 @@ public class MovieResourceIntTest {
         assertThat(movieExistsInEs).isFalse();
 
         // Validate the database is empty
-        List<Movie> movies = movieRepository.findAll();
-        assertThat(movies).hasSize(databaseSizeBeforeDelete - 1);
+        List<Movie> movieList = movieRepository.findAll();
+        assertThat(movieList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test

@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "jhipsterVersion": "3.12.0",
+    "jhipsterVersion": "3.12.1",
     "baseName": "vmms",
     "packageName": "com.video.manager",
     "packageFolder": "com/video/manager",

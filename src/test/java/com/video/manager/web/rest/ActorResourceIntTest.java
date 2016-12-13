@@ -115,15 +115,36 @@ public class ActorResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Actor in the database
-        List<Actor> actors = actorRepository.findAll();
-        assertThat(actors).hasSize(databaseSizeBeforeCreate + 1);
-        Actor testActor = actors.get(actors.size() - 1);
+        List<Actor> actorList = actorRepository.findAll();
+        assertThat(actorList).hasSize(databaseSizeBeforeCreate + 1);
+        Actor testActor = actorList.get(actorList.size() - 1);
         assertThat(testActor.getActorOrder()).isEqualTo(DEFAULT_ACTOR_ORDER);
         assertThat(testActor.getActorCharacter()).isEqualTo(DEFAULT_ACTOR_CHARACTER);
 
         // Validate the Actor in ElasticSearch
         Actor actorEs = actorSearchRepository.findOne(testActor.getId());
         assertThat(actorEs).isEqualToComparingFieldByField(testActor);
+    }
+
+    @Test
+    @Transactional
+    public void createActorWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = actorRepository.findAll().size();
+
+        // Create the Actor with an existing ID
+        Actor existingActor = new Actor();
+        existingActor.setId(1L);
+        ActorDTO existingActorDTO = actorMapper.actorToActorDTO(existingActor);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restActorMockMvc.perform(post("/api/actors")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(existingActorDTO)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Alice in the database
+        List<Actor> actorList = actorRepository.findAll();
+        assertThat(actorList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -141,8 +162,8 @@ public class ActorResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(actorDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Actor> actors = actorRepository.findAll();
-        assertThat(actors).hasSize(databaseSizeBeforeTest);
+        List<Actor> actorList = actorRepository.findAll();
+        assertThat(actorList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -151,7 +172,7 @@ public class ActorResourceIntTest {
         // Initialize the database
         actorRepository.saveAndFlush(actor);
 
-        // Get all the actors
+        // Get all the actorList
         restActorMockMvc.perform(get("/api/actors?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -204,15 +225,34 @@ public class ActorResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the Actor in the database
-        List<Actor> actors = actorRepository.findAll();
-        assertThat(actors).hasSize(databaseSizeBeforeUpdate);
-        Actor testActor = actors.get(actors.size() - 1);
+        List<Actor> actorList = actorRepository.findAll();
+        assertThat(actorList).hasSize(databaseSizeBeforeUpdate);
+        Actor testActor = actorList.get(actorList.size() - 1);
         assertThat(testActor.getActorOrder()).isEqualTo(UPDATED_ACTOR_ORDER);
         assertThat(testActor.getActorCharacter()).isEqualTo(UPDATED_ACTOR_CHARACTER);
 
         // Validate the Actor in ElasticSearch
         Actor actorEs = actorSearchRepository.findOne(testActor.getId());
         assertThat(actorEs).isEqualToComparingFieldByField(testActor);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingActor() throws Exception {
+        int databaseSizeBeforeUpdate = actorRepository.findAll().size();
+
+        // Create the Actor
+        ActorDTO actorDTO = actorMapper.actorToActorDTO(actor);
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restActorMockMvc.perform(put("/api/actors")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(actorDTO)))
+            .andExpect(status().isCreated());
+
+        // Validate the Actor in the database
+        List<Actor> actorList = actorRepository.findAll();
+        assertThat(actorList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
@@ -233,8 +273,8 @@ public class ActorResourceIntTest {
         assertThat(actorExistsInEs).isFalse();
 
         // Validate the database is empty
-        List<Actor> actors = actorRepository.findAll();
-        assertThat(actors).hasSize(databaseSizeBeforeDelete - 1);
+        List<Actor> actorList = actorRepository.findAll();
+        assertThat(actorList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test

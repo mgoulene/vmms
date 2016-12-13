@@ -5,6 +5,8 @@ import com.video.manager.service.GenreService;
 import com.video.manager.web.rest.util.HeaderUtil;
 import com.video.manager.web.rest.util.PaginationUtil;
 import com.video.manager.service.dto.GenreDTO;
+
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -89,7 +91,7 @@ public class GenreResource {
      */
     @GetMapping("/genres")
     @Timed
-    public ResponseEntity<List<GenreDTO>> getAllGenres(Pageable pageable)
+    public ResponseEntity<List<GenreDTO>> getAllGenres(@ApiParam Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Genres");
         Page<GenreDTO> page = genreService.findAll(pageable);
@@ -140,7 +142,7 @@ public class GenreResource {
      */
     @GetMapping("/_search/genres")
     @Timed
-    public ResponseEntity<List<GenreDTO>> searchGenres(@RequestParam String query, Pageable pageable)
+    public ResponseEntity<List<GenreDTO>> searchGenres(@RequestParam String query, @ApiParam Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to search for a page of Genres for query {}", query);
         Page<GenreDTO> page = genreService.search(query, pageable);

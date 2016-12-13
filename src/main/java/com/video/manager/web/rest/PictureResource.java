@@ -5,6 +5,8 @@ import com.video.manager.service.PictureService;
 import com.video.manager.web.rest.util.HeaderUtil;
 import com.video.manager.web.rest.util.PaginationUtil;
 import com.video.manager.service.dto.PictureDTO;
+
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -89,7 +91,7 @@ public class PictureResource {
      */
     @GetMapping("/pictures")
     @Timed
-    public ResponseEntity<List<PictureDTO>> getAllPictures(Pageable pageable)
+    public ResponseEntity<List<PictureDTO>> getAllPictures(@ApiParam Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Pictures");
         Page<PictureDTO> page = pictureService.findAll(pageable);
@@ -140,7 +142,7 @@ public class PictureResource {
      */
     @GetMapping("/_search/pictures")
     @Timed
-    public ResponseEntity<List<PictureDTO>> searchPictures(@RequestParam String query, Pageable pageable)
+    public ResponseEntity<List<PictureDTO>> searchPictures(@RequestParam String query, @ApiParam Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to search for a page of Pictures for query {}", query);
         Page<PictureDTO> page = pictureService.search(query, pageable);
