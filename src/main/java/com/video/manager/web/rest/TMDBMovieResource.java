@@ -28,6 +28,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api")
@@ -66,11 +67,13 @@ public class TMDBMovieResource {
         MovieDb movieDb = TmdbDataLoader.the().getMovie(id.intValue());
         MovieDTO movieDTO = new MovieDTO();
         movieDTO.setTitle(movieDb.getTitle());
-        List<PersonCast> casts = movieDb.getCast();
-        List<PersonCrew> crew = movieDb.getCrew();
         Credits credits = TmdbDataLoader.the().getCredits(id.intValue());
         for (int i = 0; i < credits.getCast().size(); i++) {
             PersonPeople person = TmdbDataLoader.the().getPersonInfo(credits.getCast().get(i).getId());
+            System.out.println(person.getCharacter());
+        }
+        for (int i = 0; i < credits.getCrew().size(); i++) {
+            PersonPeople person = TmdbDataLoader.the().getPersonInfo(credits.getCrew().get(i).getId());
             System.out.println(person.getCharacter());
         }
         MovieImages movieImages = TmdbDataLoader.the().getImages(movieDb.getId());
@@ -82,7 +85,7 @@ public class TMDBMovieResource {
         System.out.println(".Creating Poster for : " + movieDb.getTitle());
         poster = pictureService.save(poster);
         movieDTO.setPosterId(poster.getId());
-        /*for (int i = 0; i < movieImages.getPosters().size(); i++) {
+        for (int i = 0; i < movieImages.getPosters().size(); i++) {
             String artworkURL = movieImages.getPosters().get(i).getFilePath();
             byte[] artworkBytes = TmdbDataLoader.the().getImageData(artworkURL);
             PictureDTO artworkPictureDTO = new PictureDTO();
@@ -92,10 +95,11 @@ public class TMDBMovieResource {
             System.out.println("..Creating Artwork for : " + movieDb.getTitle());
             artworkPictureDTO = pictureService.save(artworkPictureDTO);
             movieDTO.getArtworks().add(artworkPictureDTO);
-        }*/
+        }
         movieDTO.setOriginalTitle(movieDb.getOriginalTitle());
         movieDTO.setOverview(movieDb.getOverview());
         System.out.println("Creating Movie : " + movieDb.getTitle());
+
         MovieDTO result = movieService.save(movieDTO);
         return ResponseEntity.created(new URI("/api/movies/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("movie", result.getId().toString()))
