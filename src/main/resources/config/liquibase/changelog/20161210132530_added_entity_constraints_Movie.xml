@@ -59,5 +59,16 @@
                                  referencedColumnNames="id"
                                  referencedTableName="picture"/>
         
+        <addForeignKeyConstraint baseColumnNames="movies_id"
+                                 baseTableName="movie_genre"
+                                 constraintName="fk_movie_genre_movies_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="movie"/>
+        <addForeignKeyConstraint baseColumnNames="genres_id"
+                                 baseTableName="movie_genre"
+                                 constraintName="fk_movie_genre_genres_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="genre"/>
+        
     </changeSet>
 </databaseChangeLog>

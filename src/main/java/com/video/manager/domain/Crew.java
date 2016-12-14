@@ -32,8 +32,7 @@ public class Crew implements Serializable {
     @Column(name = "job")
     private String job;
 
-    @OneToOne
-    @JoinColumn(unique = true)
+    @ManyToOne
     private Person person;
 
     @ManyToMany(mappedBy = "crews")

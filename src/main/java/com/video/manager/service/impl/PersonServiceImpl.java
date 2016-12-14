@@ -29,7 +29,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class PersonServiceImpl implements PersonService{
 
     private final Logger log = LoggerFactory.getLogger(PersonServiceImpl.class);
-    
+
     @Inject
     private PersonRepository personRepository;
 
@@ -56,11 +56,11 @@ public class PersonServiceImpl implements PersonService{
 
     /**
      *  Get all the people.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<PersonDTO> findAll(Pageable pageable) {
         log.debug("Request to get all People");
         Page<Person> result = personRepository.findAll(pageable);
@@ -73,7 +73,7 @@ public class PersonServiceImpl implements PersonService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public PersonDTO findOne(Long id) {
         log.debug("Request to get Person : {}", id);
         Person person = personRepository.findOne(id);
@@ -103,5 +103,13 @@ public class PersonServiceImpl implements PersonService{
         log.debug("Request to search for a page of People for query {}", query);
         Page<Person> result = personSearchRepository.search(queryStringQuery(query), pageable);
         return result.map(person -> personMapper.personToPersonDTO(person));
+    }
+
+    @Transactional(readOnly = true)
+    public PersonDTO findOneByTmdbId(int personTmdbId) {
+        log.debug("Request to get Person with tmdbId : {}", personTmdbId);
+        Person person = personRepository.findOneByTmdbId(personTmdbId);
+        PersonDTO personDTO = personMapper.personToPersonDTO(person);
+        return personDTO;
     }
 }

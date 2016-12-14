@@ -12,4 +12,5 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface PersonRepository extends JpaRepository<Person,Long> {
 
+    Person findOneByTmdbId(int personTmdbId);
 }

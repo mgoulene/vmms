@@ -35,13 +35,6 @@ public interface MovieService {
     MovieDTO findOne(Long id);
 
     /**
-     *  Get the  "tmdbId" movie
-     * @param tmdbId
-     * @return the entity
-     */
-    public MovieDTO findOneWithTmdbId(int tmdbId);
-
-    /**
      *  Delete the "id" movie.
      *
      *  @param id the id of the entity
@@ -57,4 +50,6 @@ public interface MovieService {
      *  @return the list of entities
      */
     Page<MovieDTO> search(String query, Pageable pageable);
+
+    MovieDTO findOneByTmdbId(int tmbdId);
 }

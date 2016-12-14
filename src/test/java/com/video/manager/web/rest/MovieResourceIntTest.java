@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,8 +52,8 @@ public class MovieResourceIntTest {
     private static final String DEFAULT_OVERVIEW = "AAAAAAAAAA";
     private static final String UPDATED_OVERVIEW = "BBBBBBBBBB";
 
-    private static final String DEFAULT_RELEASE_DATE = "AAAAAAAAAA";
-    private static final String UPDATED_RELEASE_DATE = "BBBBBBBBBB";
+    private static final LocalDate DEFAULT_RELEASE_DATE = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_RELEASE_DATE = LocalDate.now(ZoneId.systemDefault());
 
     private static final Integer DEFAULT_RUNTIME = 1;
     private static final Integer UPDATED_RUNTIME = 2;

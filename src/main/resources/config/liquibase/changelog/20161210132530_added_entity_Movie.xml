@@ -36,7 +36,7 @@
                 <constraints nullable="true" />
             </column>
             
-            <column name="release_date" type="varchar(255)">
+            <column name="release_date" type="date">
                 <constraints nullable="true" />
             </column>
             
@@ -109,6 +109,17 @@
         </createTable>
 
         <addPrimaryKey columnNames="movies_id, artworks_id" tableName="movie_artwork"/>
+        
+        <createTable tableName="movie_genre">
+            <column name="genres_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="movies_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="movies_id, genres_id" tableName="movie_genre"/>
         
     </changeSet>
 </databaseChangeLog>

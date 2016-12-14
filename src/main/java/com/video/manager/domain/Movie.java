@@ -7,6 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -40,7 +41,7 @@ public class Movie implements Serializable {
     private String overview;
 
     @Column(name = "release_date")
-    private String releaseDate;
+    private LocalDate releaseDate;
 
     @Column(name = "runtime")
     private Integer runtime;
@@ -99,6 +100,13 @@ public class Movie implements Serializable {
                inverseJoinColumns = @JoinColumn(name="artworks_id", referencedColumnName="ID"))
     private Set<Picture> artworks = new HashSet<>();
 
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "movie_genre",
+               joinColumns = @JoinColumn(name="movies_id", referencedColumnName="ID"),
+               inverseJoinColumns = @JoinColumn(name="genres_id", referencedColumnName="ID"))
+    private Set<Genre> genres = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -146,16 +154,16 @@ public class Movie implements Serializable {
         this.overview = overview;
     }
 
-    public String getReleaseDate() {
+    public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
-    public Movie releaseDate(String releaseDate) {
+    public Movie releaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
         return this;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -360,6 +368,31 @@ public class Movie implements Serializable {
 
     public void setArtworks(Set<Picture> pictures) {
         this.artworks = pictures;
+    }
+
+    public Set<Genre> getGenres() {
+        return genres;
+    }
+
+    public Movie genres(Set<Genre> genres) {
+        this.genres = genres;
+        return this;
+    }
+
+    public Movie addGenre(Genre genre) {
+        genres.add(genre);
+        genre.getMovies().add(this);
+        return this;
+    }
+
+    public Movie removeGenre(Genre genre) {
+        genres.remove(genre);
+        genre.getMovies().remove(this);
+        return this;
+    }
+
+    public void setGenres(Set<Genre> genres) {
+        this.genres = genres;
     }
 
     @Override

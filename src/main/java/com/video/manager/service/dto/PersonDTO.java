@@ -34,8 +34,6 @@ public class PersonDTO implements Serializable {
     private Integer tmdbId;
 
 
-    private Long profilId;
-    
     private Long profilePictureId;
     
     public Long getId() {
@@ -93,14 +91,6 @@ public class PersonDTO implements Serializable {
 
     public void setTmdbId(Integer tmdbId) {
         this.tmdbId = tmdbId;
-    }
-
-    public Long getProfilId() {
-        return profilId;
-    }
-
-    public void setProfilId(Long pictureId) {
-        this.profilId = pictureId;
     }
 
     public Long getProfilePictureId() {

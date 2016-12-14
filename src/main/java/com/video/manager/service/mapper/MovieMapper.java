@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Mapper for the entity Movie and its DTO MovieDTO.
  */
-@Mapper(componentModel = "spring", uses = {ActorMapper.class, CrewMapper.class, PictureMapper.class, })
+@Mapper(componentModel = "spring", uses = {ActorMapper.class, CrewMapper.class, PictureMapper.class, GenreMapper.class, })
 public interface MovieMapper {
 
     @Mapping(source = "poster.id", target = "posterId")

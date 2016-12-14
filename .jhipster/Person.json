@@ -3,14 +3,6 @@
     "relationships": [
         {
             "relationshipType": "one-to-one",
-            "relationshipName": "profil",
-            "otherEntityName": "picture",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "person"
-        },
-        {
-            "relationshipType": "one-to-one",
             "relationshipName": "profilePicture",
             "otherEntityName": "picture",
             "otherEntityField": "id",

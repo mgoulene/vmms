@@ -29,7 +29,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class GenreServiceImpl implements GenreService{
 
     private final Logger log = LoggerFactory.getLogger(GenreServiceImpl.class);
-    
+
     @Inject
     private GenreRepository genreRepository;
 
@@ -56,11 +56,11 @@ public class GenreServiceImpl implements GenreService{
 
     /**
      *  Get all the genres.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<GenreDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Genres");
         Page<Genre> result = genreRepository.findAll(pageable);
@@ -73,13 +73,15 @@ public class GenreServiceImpl implements GenreService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public GenreDTO findOne(Long id) {
         log.debug("Request to get Genre : {}", id);
         Genre genre = genreRepository.findOne(id);
         GenreDTO genreDTO = genreMapper.genreToGenreDTO(genre);
         return genreDTO;
     }
+
+
 
     /**
      *  Delete the  genre by id.

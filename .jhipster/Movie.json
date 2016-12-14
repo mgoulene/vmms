@@ -48,6 +48,14 @@
             "otherEntityName": "picture",
             "otherEntityField": "id",
             "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "movie",
+            "relationshipName": "genre",
+            "otherEntityName": "genre",
+            "otherEntityField": "id",
+            "ownerSide": true
         }
     ],
     "fields": [
@@ -78,7 +86,7 @@
         },
         {
             "fieldName": "releaseDate",
-            "fieldType": "String"
+            "fieldType": "LocalDate"
         },
         {
             "fieldName": "runtime",

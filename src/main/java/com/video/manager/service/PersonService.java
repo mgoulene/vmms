@@ -50,4 +50,6 @@ public interface PersonService {
      *  @return the list of entities
      */
     Page<PersonDTO> search(String query, Pageable pageable);
+
+    PersonDTO findOneByTmdbId(int personTmdbId);
 }

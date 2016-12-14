@@ -52,10 +52,6 @@ public class Person implements Serializable {
 
     @OneToOne
     @JoinColumn(unique = true)
-    private Picture profil;
-
-    @OneToOne
-    @JoinColumn(unique = true)
     private Picture profilePicture;
 
     public Long getId() {
@@ -155,19 +151,6 @@ public class Person implements Serializable {
 
     public void setTmdbId(Integer tmdbId) {
         this.tmdbId = tmdbId;
-    }
-
-    public Picture getProfil() {
-        return profil;
-    }
-
-    public Person profil(Picture picture) {
-        this.profil = picture;
-        return this;
-    }
-
-    public void setProfil(Picture picture) {
-        this.profil = picture;
     }
 
     public Picture getProfilePicture() {

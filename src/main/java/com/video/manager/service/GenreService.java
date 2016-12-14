@@ -20,7 +20,7 @@ public interface GenreService {
 
     /**
      *  Get all the genres.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
@@ -45,9 +45,10 @@ public interface GenreService {
      * Search for the genre corresponding to the query.
      *
      *  @param query the query of the search
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
     Page<GenreDTO> search(String query, Pageable pageable);
+
 }

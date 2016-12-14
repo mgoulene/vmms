@@ -1,5 +1,6 @@
 package com.video.manager.service.dto;
 
+import java.time.LocalDate;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -24,7 +25,7 @@ public class MovieDTO implements Serializable {
     @Size(max = 40000)
     private String overview;
 
-    private String releaseDate;
+    private LocalDate releaseDate;
 
     private Integer runtime;
 
@@ -56,6 +57,8 @@ public class MovieDTO implements Serializable {
 
     private Set<PictureDTO> artworks = new HashSet<>();
 
+    private Set<GenreDTO> genres = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -84,11 +87,11 @@ public class MovieDTO implements Serializable {
     public void setOverview(String overview) {
         this.overview = overview;
     }
-    public String getReleaseDate() {
+    public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
     public Integer getRuntime() {
@@ -187,6 +190,14 @@ public class MovieDTO implements Serializable {
 
     public void setArtworks(Set<PictureDTO> pictures) {
         this.artworks = pictures;
+    }
+
+    public Set<GenreDTO> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<GenreDTO> genres) {
+        this.genres = genres;
     }
 
     @Override

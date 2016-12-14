@@ -16,6 +16,7 @@ public interface GenreMapper {
 
     List<GenreDTO> genresToGenreDTOs(List<Genre> genres);
 
+    @Mapping(target = "movies", ignore = true)
     Genre genreDTOToGenre(GenreDTO genreDTO);
 
     List<Genre> genreDTOsToGenres(List<GenreDTO> genreDTOs);

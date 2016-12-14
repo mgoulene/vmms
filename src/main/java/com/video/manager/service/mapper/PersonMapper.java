@@ -12,13 +12,11 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {})
 public interface PersonMapper {
 
-    @Mapping(source = "profil.id", target = "profilId")
     @Mapping(source = "profilePicture.id", target = "profilePictureId")
     PersonDTO personToPersonDTO(Person person);
 
     List<PersonDTO> peopleToPersonDTOs(List<Person> people);
 
-    @Mapping(source = "profilId", target = "profil")
     @Mapping(source = "profilePictureId", target = "profilePicture")
     Person personDTOToPerson(PersonDTO personDTO);
 

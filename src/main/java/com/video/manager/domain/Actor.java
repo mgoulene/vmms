@@ -34,8 +34,7 @@ public class Actor implements Serializable {
     @Column(name = "actor_character")
     private String actorCharacter;
 
-    @OneToOne
-    @JoinColumn(unique = true)
+    @ManyToOne
     private Person person;
 
     @ManyToMany(mappedBy = "actors")

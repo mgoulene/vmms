@@ -81,15 +81,6 @@ public class MovieServiceImpl implements MovieService{
         return movieDTO;
     }
 
-    @Transactional(readOnly = true)
-    public MovieDTO findOneWithTmdbId(int tmdbId) {
-        log.debug("Request to get Movie with tmdbID: {}", tmdbId);
-        Movie movie = movieRepository.findOneByTmdbId(tmdbId);
-        MovieDTO movieDTO = movieMapper.movieToMovieDTO(movie);
-        return movieDTO;
-
-    }
-
     /**
      *  Delete the  movie by id.
      *
@@ -112,5 +103,13 @@ public class MovieServiceImpl implements MovieService{
         log.debug("Request to search for a page of Movies for query {}", query);
         Page<Movie> result = movieSearchRepository.search(queryStringQuery(query), pageable);
         return result.map(movie -> movieMapper.movieToMovieDTO(movie));
+    }
+
+    @Transactional(readOnly = true)
+    public MovieDTO findOneByTmdbId(int tmbdId) {
+        log.debug("Request to get Movie from TmbdId: {}", tmbdId);
+        Movie movie = movieRepository.findOneByTmdbId(tmbdId);
+        MovieDTO movieDTO = movieMapper.movieToMovieDTO(movie);
+        return movieDTO;
     }
 }
