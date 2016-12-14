@@ -38,6 +38,17 @@
                                  referencedTableName="actor"/>
         
         <addForeignKeyConstraint baseColumnNames="movies_id"
+                                 baseTableName="movie_crew"
+                                 constraintName="fk_movie_crew_movies_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="movie"/>
+        <addForeignKeyConstraint baseColumnNames="crews_id"
+                                 baseTableName="movie_crew"
+                                 constraintName="fk_movie_crew_crews_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="crew"/>
+        
+        <addForeignKeyConstraint baseColumnNames="movies_id"
                                  baseTableName="movie_artwork"
                                  constraintName="fk_movie_artwork_movies_id"
                                  referencedColumnNames="id"

@@ -1,27 +1,27 @@
 package com.video.manager.service.mapper;
 
 import com.video.manager.domain.*;
-import com.video.manager.service.dto.ActorDTO;
+import com.video.manager.service.dto.CrewDTO;
 
 import org.mapstruct.*;
 import java.util.List;
 
 /**
- * Mapper for the entity Actor and its DTO ActorDTO.
+ * Mapper for the entity Crew and its DTO CrewDTO.
  */
 @Mapper(componentModel = "spring", uses = {})
-public interface ActorMapper {
+public interface CrewMapper {
 
     @Mapping(source = "person.id", target = "personId")
-    ActorDTO actorToActorDTO(Actor actor);
+    CrewDTO crewToCrewDTO(Crew crew);
 
-    List<ActorDTO> actorsToActorDTOs(List<Actor> actors);
+    List<CrewDTO> crewsToCrewDTOs(List<Crew> crews);
 
     @Mapping(source = "personId", target = "person")
-    @Mapping(target = "movieActors", ignore = true)
-    Actor actorDTOToActor(ActorDTO actorDTO);
+    @Mapping(target = "movieCrews", ignore = true)
+    Crew crewDTOToCrew(CrewDTO crewDTO);
 
-    List<Actor> actorDTOsToActors(List<ActorDTO> actorDTOs);
+    List<Crew> crewDTOsToCrews(List<CrewDTO> crewDTOs);
 
     default Person personFromId(Long id) {
         if (id == null) {

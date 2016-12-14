@@ -68,7 +68,7 @@ class MovieGatlingTest extends Simulation {
             .exec(http("Create new movie")
             .post("/vmms/api/movies")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "title":"SAMPLE_TEXT", "originalTitle":"SAMPLE_TEXT", "releaseDate":"SAMPLE_TEXT", "overview":"SAMPLE_TEXT", "homepage":"SAMPLE_TEXT", "budget":null, "revenue":null, "runtime":"0", "voteRating":null, "voteCount":"0"}""")).asJSON
+            .body(StringBody("""{"id":null, "title":"SAMPLE_TEXT", "originalTitle":"SAMPLE_TEXT", "overview":"SAMPLE_TEXT", "releaseDate":"SAMPLE_TEXT", "runtime":"0", "voteRating":null, "voteCount":"0", "homepage":"SAMPLE_TEXT", "budget":null, "revenue":null, "tmdbId":"0"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_movie_url"))).exitHereIfFailed
             .pause(10)

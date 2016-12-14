@@ -46,17 +46,23 @@ public class PersonResourceIntTest {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_BIOGRAPHY = "AAAAAAAAAA";
-    private static final String UPDATED_BIOGRAPHY = "BBBBBBBBBB";
-
     private static final LocalDate DEFAULT_BIRTHDAY = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_BIRTHDAY = LocalDate.now(ZoneId.systemDefault());
 
     private static final LocalDate DEFAULT_DEATHDAY = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DEATHDAY = LocalDate.now(ZoneId.systemDefault());
 
+    private static final String DEFAULT_BIOGRAPHY = "AAAAAAAAAA";
+    private static final String UPDATED_BIOGRAPHY = "BBBBBBBBBB";
+
+    private static final String DEFAULT_BIRTHPLACE = "AAAAAAAAAA";
+    private static final String UPDATED_BIRTHPLACE = "BBBBBBBBBB";
+
     private static final String DEFAULT_HOMEPAGE = "AAAAAAAAAA";
     private static final String UPDATED_HOMEPAGE = "BBBBBBBBBB";
+
+    private static final Integer DEFAULT_TMDB_ID = 1;
+    private static final Integer UPDATED_TMDB_ID = 2;
 
     @Inject
     private PersonRepository personRepository;
@@ -102,10 +108,12 @@ public class PersonResourceIntTest {
     public static Person createEntity(EntityManager em) {
         Person person = new Person()
                 .name(DEFAULT_NAME)
-                .biography(DEFAULT_BIOGRAPHY)
                 .birthday(DEFAULT_BIRTHDAY)
                 .deathday(DEFAULT_DEATHDAY)
-                .homepage(DEFAULT_HOMEPAGE);
+                .biography(DEFAULT_BIOGRAPHY)
+                .birthplace(DEFAULT_BIRTHPLACE)
+                .homepage(DEFAULT_HOMEPAGE)
+                .tmdbId(DEFAULT_TMDB_ID);
         return person;
     }
 
@@ -133,10 +141,12 @@ public class PersonResourceIntTest {
         assertThat(personList).hasSize(databaseSizeBeforeCreate + 1);
         Person testPerson = personList.get(personList.size() - 1);
         assertThat(testPerson.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testPerson.getBiography()).isEqualTo(DEFAULT_BIOGRAPHY);
         assertThat(testPerson.getBirthday()).isEqualTo(DEFAULT_BIRTHDAY);
         assertThat(testPerson.getDeathday()).isEqualTo(DEFAULT_DEATHDAY);
+        assertThat(testPerson.getBiography()).isEqualTo(DEFAULT_BIOGRAPHY);
+        assertThat(testPerson.getBirthplace()).isEqualTo(DEFAULT_BIRTHPLACE);
         assertThat(testPerson.getHomepage()).isEqualTo(DEFAULT_HOMEPAGE);
+        assertThat(testPerson.getTmdbId()).isEqualTo(DEFAULT_TMDB_ID);
 
         // Validate the Person in ElasticSearch
         Person personEs = personSearchRepository.findOne(testPerson.getId());
@@ -195,10 +205,12 @@ public class PersonResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(person.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].biography").value(hasItem(DEFAULT_BIOGRAPHY.toString())))
             .andExpect(jsonPath("$.[*].birthday").value(hasItem(DEFAULT_BIRTHDAY.toString())))
             .andExpect(jsonPath("$.[*].deathday").value(hasItem(DEFAULT_DEATHDAY.toString())))
-            .andExpect(jsonPath("$.[*].homepage").value(hasItem(DEFAULT_HOMEPAGE.toString())));
+            .andExpect(jsonPath("$.[*].biography").value(hasItem(DEFAULT_BIOGRAPHY.toString())))
+            .andExpect(jsonPath("$.[*].birthplace").value(hasItem(DEFAULT_BIRTHPLACE.toString())))
+            .andExpect(jsonPath("$.[*].homepage").value(hasItem(DEFAULT_HOMEPAGE.toString())))
+            .andExpect(jsonPath("$.[*].tmdbId").value(hasItem(DEFAULT_TMDB_ID)));
     }
 
     @Test
@@ -213,10 +225,12 @@ public class PersonResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(person.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.biography").value(DEFAULT_BIOGRAPHY.toString()))
             .andExpect(jsonPath("$.birthday").value(DEFAULT_BIRTHDAY.toString()))
             .andExpect(jsonPath("$.deathday").value(DEFAULT_DEATHDAY.toString()))
-            .andExpect(jsonPath("$.homepage").value(DEFAULT_HOMEPAGE.toString()));
+            .andExpect(jsonPath("$.biography").value(DEFAULT_BIOGRAPHY.toString()))
+            .andExpect(jsonPath("$.birthplace").value(DEFAULT_BIRTHPLACE.toString()))
+            .andExpect(jsonPath("$.homepage").value(DEFAULT_HOMEPAGE.toString()))
+            .andExpect(jsonPath("$.tmdbId").value(DEFAULT_TMDB_ID));
     }
 
     @Test
@@ -239,10 +253,12 @@ public class PersonResourceIntTest {
         Person updatedPerson = personRepository.findOne(person.getId());
         updatedPerson
                 .name(UPDATED_NAME)
-                .biography(UPDATED_BIOGRAPHY)
                 .birthday(UPDATED_BIRTHDAY)
                 .deathday(UPDATED_DEATHDAY)
-                .homepage(UPDATED_HOMEPAGE);
+                .biography(UPDATED_BIOGRAPHY)
+                .birthplace(UPDATED_BIRTHPLACE)
+                .homepage(UPDATED_HOMEPAGE)
+                .tmdbId(UPDATED_TMDB_ID);
         PersonDTO personDTO = personMapper.personToPersonDTO(updatedPerson);
 
         restPersonMockMvc.perform(put("/api/people")
@@ -255,10 +271,12 @@ public class PersonResourceIntTest {
         assertThat(personList).hasSize(databaseSizeBeforeUpdate);
         Person testPerson = personList.get(personList.size() - 1);
         assertThat(testPerson.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testPerson.getBiography()).isEqualTo(UPDATED_BIOGRAPHY);
         assertThat(testPerson.getBirthday()).isEqualTo(UPDATED_BIRTHDAY);
         assertThat(testPerson.getDeathday()).isEqualTo(UPDATED_DEATHDAY);
+        assertThat(testPerson.getBiography()).isEqualTo(UPDATED_BIOGRAPHY);
+        assertThat(testPerson.getBirthplace()).isEqualTo(UPDATED_BIRTHPLACE);
         assertThat(testPerson.getHomepage()).isEqualTo(UPDATED_HOMEPAGE);
+        assertThat(testPerson.getTmdbId()).isEqualTo(UPDATED_TMDB_ID);
 
         // Validate the Person in ElasticSearch
         Person personEs = personSearchRepository.findOne(testPerson.getId());
@@ -319,9 +337,11 @@ public class PersonResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(person.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].biography").value(hasItem(DEFAULT_BIOGRAPHY.toString())))
             .andExpect(jsonPath("$.[*].birthday").value(hasItem(DEFAULT_BIRTHDAY.toString())))
             .andExpect(jsonPath("$.[*].deathday").value(hasItem(DEFAULT_DEATHDAY.toString())))
-            .andExpect(jsonPath("$.[*].homepage").value(hasItem(DEFAULT_HOMEPAGE.toString())));
+            .andExpect(jsonPath("$.[*].biography").value(hasItem(DEFAULT_BIOGRAPHY.toString())))
+            .andExpect(jsonPath("$.[*].birthplace").value(hasItem(DEFAULT_BIRTHPLACE.toString())))
+            .andExpect(jsonPath("$.[*].homepage").value(hasItem(DEFAULT_HOMEPAGE.toString())))
+            .andExpect(jsonPath("$.[*].tmdbId").value(hasItem(DEFAULT_TMDB_ID)));
     }
 }

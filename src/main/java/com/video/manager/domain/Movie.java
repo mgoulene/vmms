@@ -35,22 +35,12 @@ public class Movie implements Serializable {
     @Column(name = "original_title", length = 200)
     private String originalTitle;
 
-    @Column(name = "release_date")
-    private String releaseDate;
-
     @Size(max = 40000)
     @Column(name = "overview", length = 40000)
     private String overview;
 
-    @Size(max = 400)
-    @Column(name = "homepage", length = 400)
-    private String homepage;
-
-    @Column(name = "budget")
-    private Long budget;
-
-    @Column(name = "revenue")
-    private Long revenue;
+    @Column(name = "release_date")
+    private String releaseDate;
 
     @Column(name = "runtime")
     private Integer runtime;
@@ -62,6 +52,19 @@ public class Movie implements Serializable {
 
     @Column(name = "vote_count")
     private Integer voteCount;
+
+    @Size(max = 400)
+    @Column(name = "homepage", length = 400)
+    private String homepage;
+
+    @Column(name = "budget")
+    private Long budget;
+
+    @Column(name = "revenue")
+    private Long revenue;
+
+    @Column(name = "tmdb_id")
+    private Integer tmdbId;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -81,6 +84,13 @@ public class Movie implements Serializable {
                joinColumns = @JoinColumn(name="movies_id", referencedColumnName="ID"),
                inverseJoinColumns = @JoinColumn(name="actors_id", referencedColumnName="ID"))
     private Set<Actor> actors = new HashSet<>();
+
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "movie_crew",
+               joinColumns = @JoinColumn(name="movies_id", referencedColumnName="ID"),
+               inverseJoinColumns = @JoinColumn(name="crews_id", referencedColumnName="ID"))
+    private Set<Crew> crews = new HashSet<>();
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -123,6 +133,19 @@ public class Movie implements Serializable {
         this.originalTitle = originalTitle;
     }
 
+    public String getOverview() {
+        return overview;
+    }
+
+    public Movie overview(String overview) {
+        this.overview = overview;
+        return this;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
     public String getReleaseDate() {
         return releaseDate;
     }
@@ -136,17 +159,43 @@ public class Movie implements Serializable {
         this.releaseDate = releaseDate;
     }
 
-    public String getOverview() {
-        return overview;
+    public Integer getRuntime() {
+        return runtime;
     }
 
-    public Movie overview(String overview) {
-        this.overview = overview;
+    public Movie runtime(Integer runtime) {
+        this.runtime = runtime;
         return this;
     }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
+    public void setRuntime(Integer runtime) {
+        this.runtime = runtime;
+    }
+
+    public Float getVoteRating() {
+        return voteRating;
+    }
+
+    public Movie voteRating(Float voteRating) {
+        this.voteRating = voteRating;
+        return this;
+    }
+
+    public void setVoteRating(Float voteRating) {
+        this.voteRating = voteRating;
+    }
+
+    public Integer getVoteCount() {
+        return voteCount;
+    }
+
+    public Movie voteCount(Integer voteCount) {
+        this.voteCount = voteCount;
+        return this;
+    }
+
+    public void setVoteCount(Integer voteCount) {
+        this.voteCount = voteCount;
     }
 
     public String getHomepage() {
@@ -188,43 +237,17 @@ public class Movie implements Serializable {
         this.revenue = revenue;
     }
 
-    public Integer getRuntime() {
-        return runtime;
+    public Integer getTmdbId() {
+        return tmdbId;
     }
 
-    public Movie runtime(Integer runtime) {
-        this.runtime = runtime;
+    public Movie tmdbId(Integer tmdbId) {
+        this.tmdbId = tmdbId;
         return this;
     }
 
-    public void setRuntime(Integer runtime) {
-        this.runtime = runtime;
-    }
-
-    public Float getVoteRating() {
-        return voteRating;
-    }
-
-    public Movie voteRating(Float voteRating) {
-        this.voteRating = voteRating;
-        return this;
-    }
-
-    public void setVoteRating(Float voteRating) {
-        this.voteRating = voteRating;
-    }
-
-    public Integer getVoteCount() {
-        return voteCount;
-    }
-
-    public Movie voteCount(Integer voteCount) {
-        this.voteCount = voteCount;
-        return this;
-    }
-
-    public void setVoteCount(Integer voteCount) {
-        this.voteCount = voteCount;
+    public void setTmdbId(Integer tmdbId) {
+        this.tmdbId = tmdbId;
     }
 
     public Picture getPoster() {
@@ -277,18 +300,43 @@ public class Movie implements Serializable {
 
     public Movie addActor(Actor actor) {
         actors.add(actor);
-        actor.getMovieActrors().add(this);
+        actor.getMovieActors().add(this);
         return this;
     }
 
     public Movie removeActor(Actor actor) {
         actors.remove(actor);
-        actor.getMovieActrors().remove(this);
+        actor.getMovieActors().remove(this);
         return this;
     }
 
     public void setActors(Set<Actor> actors) {
         this.actors = actors;
+    }
+
+    public Set<Crew> getCrews() {
+        return crews;
+    }
+
+    public Movie crews(Set<Crew> crews) {
+        this.crews = crews;
+        return this;
+    }
+
+    public Movie addCrew(Crew crew) {
+        crews.add(crew);
+        crew.getMovieCrews().add(this);
+        return this;
+    }
+
+    public Movie removeCrew(Crew crew) {
+        crews.remove(crew);
+        crew.getMovieCrews().remove(this);
+        return this;
+    }
+
+    public void setCrews(Set<Crew> crews) {
+        this.crews = crews;
     }
 
     public Set<Picture> getArtworks() {
@@ -340,14 +388,15 @@ public class Movie implements Serializable {
             "id=" + id +
             ", title='" + title + "'" +
             ", originalTitle='" + originalTitle + "'" +
-            ", releaseDate='" + releaseDate + "'" +
             ", overview='" + overview + "'" +
-            ", homepage='" + homepage + "'" +
-            ", budget='" + budget + "'" +
-            ", revenue='" + revenue + "'" +
+            ", releaseDate='" + releaseDate + "'" +
             ", runtime='" + runtime + "'" +
             ", voteRating='" + voteRating + "'" +
             ", voteCount='" + voteCount + "'" +
+            ", homepage='" + homepage + "'" +
+            ", budget='" + budget + "'" +
+            ", revenue='" + revenue + "'" +
+            ", tmdbId='" + tmdbId + "'" +
             '}';
     }
 }

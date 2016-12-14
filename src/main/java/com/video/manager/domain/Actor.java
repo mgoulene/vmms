@@ -41,7 +41,7 @@ public class Actor implements Serializable {
     @ManyToMany(mappedBy = "actors")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Movie> movieActrors = new HashSet<>();
+    private Set<Movie> movieActors = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -90,29 +90,29 @@ public class Actor implements Serializable {
         this.person = person;
     }
 
-    public Set<Movie> getMovieActrors() {
-        return movieActrors;
+    public Set<Movie> getMovieActors() {
+        return movieActors;
     }
 
-    public Actor movieActrors(Set<Movie> movies) {
-        this.movieActrors = movies;
+    public Actor movieActors(Set<Movie> movies) {
+        this.movieActors = movies;
         return this;
     }
 
-    public Actor addMovieActror(Movie movie) {
-        movieActrors.add(movie);
+    public Actor addMovieActor(Movie movie) {
+        movieActors.add(movie);
         movie.getActors().add(this);
         return this;
     }
 
-    public Actor removeMovieActror(Movie movie) {
-        movieActrors.remove(movie);
+    public Actor removeMovieActor(Movie movie) {
+        movieActors.remove(movie);
         movie.getActors().remove(this);
         return this;
     }
 
-    public void setMovieActrors(Set<Movie> movies) {
-        this.movieActrors = movies;
+    public void setMovieActors(Set<Movie> movies) {
+        this.movieActors = movies;
     }
 
     @Override

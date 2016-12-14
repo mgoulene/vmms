@@ -32,11 +32,23 @@
                 <constraints nullable="true" />
             </column>
             
+            <column name="overview" type="varchar(40000)">
+                <constraints nullable="true" />
+            </column>
+            
             <column name="release_date" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             
-            <column name="overview" type="varchar(40000)">
+            <column name="runtime" type="integer">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="vote_rating" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="vote_count" type="integer">
                 <constraints nullable="true" />
             </column>
             
@@ -52,15 +64,7 @@
                 <constraints nullable="true" />
             </column>
             
-            <column name="runtime" type="integer">
-                <constraints nullable="true" />
-            </column>
-            
-            <column name="vote_rating" type="${floatType}">
-                <constraints nullable="true" />
-            </column>
-            
-            <column name="vote_count" type="integer">
+            <column name="tmdb_id" type="integer">
                 <constraints nullable="true" />
             </column>
                         <column name="poster_id" type="bigint">
@@ -83,6 +87,17 @@
         </createTable>
 
         <addPrimaryKey columnNames="movies_id, actors_id" tableName="movie_actor"/>
+        
+        <createTable tableName="movie_crew">
+            <column name="crews_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="movies_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="movies_id, crews_id" tableName="movie_crew"/>
         
         <createTable tableName="movie_artwork">
             <column name="artworks_id" type="bigint">

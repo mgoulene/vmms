@@ -8,13 +8,9 @@ import com.video.manager.service.dto.MovieDTO;
 import com.video.manager.service.dto.PictureDTO;
 import com.video.manager.tmdb.TmdbDataLoader;
 import com.video.manager.web.rest.util.HeaderUtil;
-import info.movito.themoviedbapi.TmdbMovies;
-import info.movito.themoviedbapi.TmdbSearch;
 import info.movito.themoviedbapi.model.Credits;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.MovieImages;
-import info.movito.themoviedbapi.model.people.PersonCast;
-import info.movito.themoviedbapi.model.people.PersonCrew;
 import info.movito.themoviedbapi.model.people.PersonPeople;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +24,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api")
@@ -64,46 +59,50 @@ public class TMDBMovieResource {
     @Timed
     public ResponseEntity<MovieDTO> importTMDBMovie(@PathVariable Long id) throws URISyntaxException {
         log.debug("REST request to import TMDBMovie : {}", id);
-        MovieDb movieDb = TmdbDataLoader.the().getMovie(id.intValue());
-        MovieDTO movieDTO = new MovieDTO();
-        movieDTO.setTitle(movieDb.getTitle());
-        Credits credits = TmdbDataLoader.the().getCredits(id.intValue());
-        for (int i = 0; i < credits.getCast().size(); i++) {
-            PersonPeople person = TmdbDataLoader.the().getPersonInfo(credits.getCast().get(i).getId());
-            System.out.println(person.getCharacter());
+        MovieDTO result = movieService.findOneWithTmdbId(id.intValue());
+        if (result == null) {
+            MovieDb movieDb = TmdbDataLoader.the().getMovie(id.intValue());
+            MovieDTO movieDTO = new MovieDTO();
+            movieDTO.setTitle(movieDb.getTitle());
+            movieDTO.setOriginalTitle(movieDb.getOriginalTitle());
+            movieDTO.setOverview(movieDb.getOverview());
+            movieDTO.setTmdbId(movieDb.getId());
+            Credits credits = TmdbDataLoader.the().getCredits(id.intValue());
+            for (int i = 0; i < credits.getCast().size(); i++) {
+                PersonPeople person = TmdbDataLoader.the().getPersonInfo(credits.getCast().get(i).getId());
+                System.out.println(person.getCharacter());
+            }
+            for (int i = 0; i < credits.getCrew().size(); i++) {
+                PersonPeople person = TmdbDataLoader.the().getPersonInfo(credits.getCrew().get(i).getId());
+                System.out.println(person.getCharacter());
+            }
+            MovieImages movieImages = TmdbDataLoader.the().getImages(movieDb.getId());
+            byte[] posterData = TmdbDataLoader.the().getImageData(movieDb.getPosterPath());
+            PictureDTO poster = new PictureDTO();
+            poster.setImage(posterData);
+            poster.setType(PictureType.POSTER_MOVIE);
+            poster.setImageContentType(MimeTypeUtils.IMAGE_JPEG.getType());
+            System.out.println(".Creating Poster for : " + movieDb.getTitle());
+            poster = pictureService.save(poster);
+            movieDTO.setPosterId(poster.getId());
+            for (int i = 0; i < movieImages.getPosters().size(); i++) {
+                String artworkURL = movieImages.getPosters().get(i).getFilePath();
+                byte[] artworkBytes = TmdbDataLoader.the().getImageData(artworkURL);
+                PictureDTO artworkPictureDTO = new PictureDTO();
+                artworkPictureDTO.setType(PictureType.ARTWORK);
+                artworkPictureDTO.setImageContentType(MimeTypeUtils.IMAGE_JPEG.getType());
+                artworkPictureDTO.setImage(artworkBytes);
+                System.out.println("..Creating Artwork for : " + movieDb.getTitle());
+                artworkPictureDTO = pictureService.save(artworkPictureDTO);
+                movieDTO.getArtworks().add(artworkPictureDTO);
+            }
+            System.out.println("Creating Movie : " + movieDb.getTitle());
+            result = movieService.save(movieDTO);
         }
-        for (int i = 0; i < credits.getCrew().size(); i++) {
-            PersonPeople person = TmdbDataLoader.the().getPersonInfo(credits.getCrew().get(i).getId());
-            System.out.println(person.getCharacter());
-        }
-        MovieImages movieImages = TmdbDataLoader.the().getImages(movieDb.getId());
-        byte[] posterData = TmdbDataLoader.the().getImageData(movieDb.getPosterPath());
-        PictureDTO poster = new PictureDTO();
-        poster.setImage(posterData);
-        poster.setType(PictureType.POSTER_MOVIE);
-        poster.setImageContentType(MimeTypeUtils.IMAGE_JPEG.getType());
-        System.out.println(".Creating Poster for : " + movieDb.getTitle());
-        poster = pictureService.save(poster);
-        movieDTO.setPosterId(poster.getId());
-        for (int i = 0; i < movieImages.getPosters().size(); i++) {
-            String artworkURL = movieImages.getPosters().get(i).getFilePath();
-            byte[] artworkBytes = TmdbDataLoader.the().getImageData(artworkURL);
-            PictureDTO artworkPictureDTO = new PictureDTO();
-            artworkPictureDTO.setType(PictureType.ARTWORK);
-            artworkPictureDTO.setImageContentType(MimeTypeUtils.IMAGE_JPEG.getType());
-            artworkPictureDTO.setImage(artworkBytes);
-            System.out.println("..Creating Artwork for : " + movieDb.getTitle());
-            artworkPictureDTO = pictureService.save(artworkPictureDTO);
-            movieDTO.getArtworks().add(artworkPictureDTO);
-        }
-        movieDTO.setOriginalTitle(movieDb.getOriginalTitle());
-        movieDTO.setOverview(movieDb.getOverview());
-        System.out.println("Creating Movie : " + movieDb.getTitle());
-
-        MovieDTO result = movieService.save(movieDTO);
         return ResponseEntity.created(new URI("/api/movies/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("movie", result.getId().toString()))
             .body(result);
+
     }
 
 

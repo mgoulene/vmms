@@ -1,60 +1,53 @@
 package com.video.manager.service;
 
-import com.video.manager.service.dto.MovieDTO;
+import com.video.manager.service.dto.CrewDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 /**
- * Service Interface for managing Movie.
+ * Service Interface for managing Crew.
  */
-public interface MovieService {
+public interface CrewService {
 
     /**
-     * Save a movie.
+     * Save a crew.
      *
-     * @param movieDTO the entity to save
+     * @param crewDTO the entity to save
      * @return the persisted entity
      */
-    MovieDTO save(MovieDTO movieDTO);
+    CrewDTO save(CrewDTO crewDTO);
 
     /**
-     *  Get all the movies.
-     *
+     *  Get all the crews.
+     *  
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    Page<MovieDTO> findAll(Pageable pageable);
+    Page<CrewDTO> findAll(Pageable pageable);
 
     /**
-     *  Get the "id" movie.
+     *  Get the "id" crew.
      *
      *  @param id the id of the entity
      *  @return the entity
      */
-    MovieDTO findOne(Long id);
+    CrewDTO findOne(Long id);
 
     /**
-     *  Get the  "tmdbId" movie
-     * @param tmdbId
-     * @return the entity
-     */
-    public MovieDTO findOneWithTmdbId(int tmdbId);
-
-    /**
-     *  Delete the "id" movie.
+     *  Delete the "id" crew.
      *
      *  @param id the id of the entity
      */
     void delete(Long id);
 
     /**
-     * Search for the movie corresponding to the query.
+     * Search for the crew corresponding to the query.
      *
      *  @param query the query of the search
-     *
+     *  
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    Page<MovieDTO> search(String query, Pageable pageable);
+    Page<CrewDTO> search(String query, Pageable pageable);
 }

@@ -47,11 +47,20 @@ public class MovieResourceIntTest {
     private static final String DEFAULT_ORIGINAL_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_ORIGINAL_TITLE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_OVERVIEW = "AAAAAAAAAA";
+    private static final String UPDATED_OVERVIEW = "BBBBBBBBBB";
+
     private static final String DEFAULT_RELEASE_DATE = "AAAAAAAAAA";
     private static final String UPDATED_RELEASE_DATE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_OVERVIEW = "AAAAAAAAAA";
-    private static final String UPDATED_OVERVIEW = "BBBBBBBBBB";
+    private static final Integer DEFAULT_RUNTIME = 1;
+    private static final Integer UPDATED_RUNTIME = 2;
+
+    private static final Float DEFAULT_VOTE_RATING = 0F;
+    private static final Float UPDATED_VOTE_RATING = 1F;
+
+    private static final Integer DEFAULT_VOTE_COUNT = 1;
+    private static final Integer UPDATED_VOTE_COUNT = 2;
 
     private static final String DEFAULT_HOMEPAGE = "AAAAAAAAAA";
     private static final String UPDATED_HOMEPAGE = "BBBBBBBBBB";
@@ -62,14 +71,8 @@ public class MovieResourceIntTest {
     private static final Long DEFAULT_REVENUE = 1L;
     private static final Long UPDATED_REVENUE = 2L;
 
-    private static final Integer DEFAULT_RUNTIME = 1;
-    private static final Integer UPDATED_RUNTIME = 2;
-
-    private static final Float DEFAULT_VOTE_RATING = 0F;
-    private static final Float UPDATED_VOTE_RATING = 1F;
-
-    private static final Integer DEFAULT_VOTE_COUNT = 1;
-    private static final Integer UPDATED_VOTE_COUNT = 2;
+    private static final Integer DEFAULT_TMDB_ID = 1;
+    private static final Integer UPDATED_TMDB_ID = 2;
 
     @Inject
     private MovieRepository movieRepository;
@@ -116,14 +119,15 @@ public class MovieResourceIntTest {
         Movie movie = new Movie()
                 .title(DEFAULT_TITLE)
                 .originalTitle(DEFAULT_ORIGINAL_TITLE)
-                .releaseDate(DEFAULT_RELEASE_DATE)
                 .overview(DEFAULT_OVERVIEW)
+                .releaseDate(DEFAULT_RELEASE_DATE)
+                .runtime(DEFAULT_RUNTIME)
+                .voteRating(DEFAULT_VOTE_RATING)
+                .voteCount(DEFAULT_VOTE_COUNT)
                 .homepage(DEFAULT_HOMEPAGE)
                 .budget(DEFAULT_BUDGET)
                 .revenue(DEFAULT_REVENUE)
-                .runtime(DEFAULT_RUNTIME)
-                .voteRating(DEFAULT_VOTE_RATING)
-                .voteCount(DEFAULT_VOTE_COUNT);
+                .tmdbId(DEFAULT_TMDB_ID);
         return movie;
     }
 
@@ -152,14 +156,15 @@ public class MovieResourceIntTest {
         Movie testMovie = movieList.get(movieList.size() - 1);
         assertThat(testMovie.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testMovie.getOriginalTitle()).isEqualTo(DEFAULT_ORIGINAL_TITLE);
-        assertThat(testMovie.getReleaseDate()).isEqualTo(DEFAULT_RELEASE_DATE);
         assertThat(testMovie.getOverview()).isEqualTo(DEFAULT_OVERVIEW);
-        assertThat(testMovie.getHomepage()).isEqualTo(DEFAULT_HOMEPAGE);
-        assertThat(testMovie.getBudget()).isEqualTo(DEFAULT_BUDGET);
-        assertThat(testMovie.getRevenue()).isEqualTo(DEFAULT_REVENUE);
+        assertThat(testMovie.getReleaseDate()).isEqualTo(DEFAULT_RELEASE_DATE);
         assertThat(testMovie.getRuntime()).isEqualTo(DEFAULT_RUNTIME);
         assertThat(testMovie.getVoteRating()).isEqualTo(DEFAULT_VOTE_RATING);
         assertThat(testMovie.getVoteCount()).isEqualTo(DEFAULT_VOTE_COUNT);
+        assertThat(testMovie.getHomepage()).isEqualTo(DEFAULT_HOMEPAGE);
+        assertThat(testMovie.getBudget()).isEqualTo(DEFAULT_BUDGET);
+        assertThat(testMovie.getRevenue()).isEqualTo(DEFAULT_REVENUE);
+        assertThat(testMovie.getTmdbId()).isEqualTo(DEFAULT_TMDB_ID);
 
         // Validate the Movie in ElasticSearch
         Movie movieEs = movieSearchRepository.findOne(testMovie.getId());
@@ -219,14 +224,15 @@ public class MovieResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(movie.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].originalTitle").value(hasItem(DEFAULT_ORIGINAL_TITLE.toString())))
-            .andExpect(jsonPath("$.[*].releaseDate").value(hasItem(DEFAULT_RELEASE_DATE.toString())))
             .andExpect(jsonPath("$.[*].overview").value(hasItem(DEFAULT_OVERVIEW.toString())))
+            .andExpect(jsonPath("$.[*].releaseDate").value(hasItem(DEFAULT_RELEASE_DATE.toString())))
+            .andExpect(jsonPath("$.[*].runtime").value(hasItem(DEFAULT_RUNTIME)))
+            .andExpect(jsonPath("$.[*].voteRating").value(hasItem(DEFAULT_VOTE_RATING.doubleValue())))
+            .andExpect(jsonPath("$.[*].voteCount").value(hasItem(DEFAULT_VOTE_COUNT)))
             .andExpect(jsonPath("$.[*].homepage").value(hasItem(DEFAULT_HOMEPAGE.toString())))
             .andExpect(jsonPath("$.[*].budget").value(hasItem(DEFAULT_BUDGET.intValue())))
             .andExpect(jsonPath("$.[*].revenue").value(hasItem(DEFAULT_REVENUE.intValue())))
-            .andExpect(jsonPath("$.[*].runtime").value(hasItem(DEFAULT_RUNTIME)))
-            .andExpect(jsonPath("$.[*].voteRating").value(hasItem(DEFAULT_VOTE_RATING.doubleValue())))
-            .andExpect(jsonPath("$.[*].voteCount").value(hasItem(DEFAULT_VOTE_COUNT)));
+            .andExpect(jsonPath("$.[*].tmdbId").value(hasItem(DEFAULT_TMDB_ID)));
     }
 
     @Test
@@ -242,14 +248,15 @@ public class MovieResourceIntTest {
             .andExpect(jsonPath("$.id").value(movie.getId().intValue()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.originalTitle").value(DEFAULT_ORIGINAL_TITLE.toString()))
-            .andExpect(jsonPath("$.releaseDate").value(DEFAULT_RELEASE_DATE.toString()))
             .andExpect(jsonPath("$.overview").value(DEFAULT_OVERVIEW.toString()))
+            .andExpect(jsonPath("$.releaseDate").value(DEFAULT_RELEASE_DATE.toString()))
+            .andExpect(jsonPath("$.runtime").value(DEFAULT_RUNTIME))
+            .andExpect(jsonPath("$.voteRating").value(DEFAULT_VOTE_RATING.doubleValue()))
+            .andExpect(jsonPath("$.voteCount").value(DEFAULT_VOTE_COUNT))
             .andExpect(jsonPath("$.homepage").value(DEFAULT_HOMEPAGE.toString()))
             .andExpect(jsonPath("$.budget").value(DEFAULT_BUDGET.intValue()))
             .andExpect(jsonPath("$.revenue").value(DEFAULT_REVENUE.intValue()))
-            .andExpect(jsonPath("$.runtime").value(DEFAULT_RUNTIME))
-            .andExpect(jsonPath("$.voteRating").value(DEFAULT_VOTE_RATING.doubleValue()))
-            .andExpect(jsonPath("$.voteCount").value(DEFAULT_VOTE_COUNT));
+            .andExpect(jsonPath("$.tmdbId").value(DEFAULT_TMDB_ID));
     }
 
     @Test
@@ -273,14 +280,15 @@ public class MovieResourceIntTest {
         updatedMovie
                 .title(UPDATED_TITLE)
                 .originalTitle(UPDATED_ORIGINAL_TITLE)
-                .releaseDate(UPDATED_RELEASE_DATE)
                 .overview(UPDATED_OVERVIEW)
+                .releaseDate(UPDATED_RELEASE_DATE)
+                .runtime(UPDATED_RUNTIME)
+                .voteRating(UPDATED_VOTE_RATING)
+                .voteCount(UPDATED_VOTE_COUNT)
                 .homepage(UPDATED_HOMEPAGE)
                 .budget(UPDATED_BUDGET)
                 .revenue(UPDATED_REVENUE)
-                .runtime(UPDATED_RUNTIME)
-                .voteRating(UPDATED_VOTE_RATING)
-                .voteCount(UPDATED_VOTE_COUNT);
+                .tmdbId(UPDATED_TMDB_ID);
         MovieDTO movieDTO = movieMapper.movieToMovieDTO(updatedMovie);
 
         restMovieMockMvc.perform(put("/api/movies")
@@ -294,14 +302,15 @@ public class MovieResourceIntTest {
         Movie testMovie = movieList.get(movieList.size() - 1);
         assertThat(testMovie.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testMovie.getOriginalTitle()).isEqualTo(UPDATED_ORIGINAL_TITLE);
-        assertThat(testMovie.getReleaseDate()).isEqualTo(UPDATED_RELEASE_DATE);
         assertThat(testMovie.getOverview()).isEqualTo(UPDATED_OVERVIEW);
-        assertThat(testMovie.getHomepage()).isEqualTo(UPDATED_HOMEPAGE);
-        assertThat(testMovie.getBudget()).isEqualTo(UPDATED_BUDGET);
-        assertThat(testMovie.getRevenue()).isEqualTo(UPDATED_REVENUE);
+        assertThat(testMovie.getReleaseDate()).isEqualTo(UPDATED_RELEASE_DATE);
         assertThat(testMovie.getRuntime()).isEqualTo(UPDATED_RUNTIME);
         assertThat(testMovie.getVoteRating()).isEqualTo(UPDATED_VOTE_RATING);
         assertThat(testMovie.getVoteCount()).isEqualTo(UPDATED_VOTE_COUNT);
+        assertThat(testMovie.getHomepage()).isEqualTo(UPDATED_HOMEPAGE);
+        assertThat(testMovie.getBudget()).isEqualTo(UPDATED_BUDGET);
+        assertThat(testMovie.getRevenue()).isEqualTo(UPDATED_REVENUE);
+        assertThat(testMovie.getTmdbId()).isEqualTo(UPDATED_TMDB_ID);
 
         // Validate the Movie in ElasticSearch
         Movie movieEs = movieSearchRepository.findOne(testMovie.getId());
@@ -363,13 +372,14 @@ public class MovieResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(movie.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].originalTitle").value(hasItem(DEFAULT_ORIGINAL_TITLE.toString())))
-            .andExpect(jsonPath("$.[*].releaseDate").value(hasItem(DEFAULT_RELEASE_DATE.toString())))
             .andExpect(jsonPath("$.[*].overview").value(hasItem(DEFAULT_OVERVIEW.toString())))
+            .andExpect(jsonPath("$.[*].releaseDate").value(hasItem(DEFAULT_RELEASE_DATE.toString())))
+            .andExpect(jsonPath("$.[*].runtime").value(hasItem(DEFAULT_RUNTIME)))
+            .andExpect(jsonPath("$.[*].voteRating").value(hasItem(DEFAULT_VOTE_RATING.doubleValue())))
+            .andExpect(jsonPath("$.[*].voteCount").value(hasItem(DEFAULT_VOTE_COUNT)))
             .andExpect(jsonPath("$.[*].homepage").value(hasItem(DEFAULT_HOMEPAGE.toString())))
             .andExpect(jsonPath("$.[*].budget").value(hasItem(DEFAULT_BUDGET.intValue())))
             .andExpect(jsonPath("$.[*].revenue").value(hasItem(DEFAULT_REVENUE.intValue())))
-            .andExpect(jsonPath("$.[*].runtime").value(hasItem(DEFAULT_RUNTIME)))
-            .andExpect(jsonPath("$.[*].voteRating").value(hasItem(DEFAULT_VOTE_RATING.doubleValue())))
-            .andExpect(jsonPath("$.[*].voteCount").value(hasItem(DEFAULT_VOTE_COUNT)));
+            .andExpect(jsonPath("$.[*].tmdbId").value(hasItem(DEFAULT_TMDB_ID)));
     }
 }

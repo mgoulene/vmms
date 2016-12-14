@@ -7,31 +7,28 @@
             "otherEntityName": "person",
             "otherEntityField": "id",
             "ownerSide": true,
-            "otherEntityRelationshipName": "actor"
+            "otherEntityRelationshipName": "crew"
         },
         {
             "relationshipType": "many-to-many",
-            "relationshipName": "movieActor",
+            "relationshipName": "movieCrew",
             "otherEntityName": "movie",
             "ownerSide": false,
-            "otherEntityRelationshipName": "actor"
+            "otherEntityRelationshipName": "crew"
         }
     ],
     "fields": [
         {
-            "fieldName": "actorOrder",
-            "fieldType": "Integer",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldName": "department",
+            "fieldType": "String"
         },
         {
-            "fieldName": "actorCharacter",
+            "fieldName": "job",
             "fieldType": "String"
         }
     ],
-    "changelogDate": "20161210132533",
-    "entityTableName": "actor",
+    "changelogDate": "20161213214815",
+    "entityTableName": "crew",
     "dto": "mapstruct",
     "pagination": "infinite-scroll",
     "service": "serviceImpl",

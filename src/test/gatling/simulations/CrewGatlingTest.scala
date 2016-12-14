@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
 
 /**
- * Performance test for the Person entity.
+ * Performance test for the Crew entity.
  */
-class PersonGatlingTest extends Simulation {
+class CrewGatlingTest extends Simulation {
 
     val context: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
     // Log all HTTP requests
@@ -42,7 +42,7 @@ class PersonGatlingTest extends Simulation {
         "Authorization" -> "${access_token}"
     )
 
-    val scn = scenario("Test the Person entity")
+    val scn = scenario("Test the Crew entity")
         .exec(http("First unauthenticated request")
         .get("/api/account")
         .headers(headers_http)
@@ -60,26 +60,26 @@ class PersonGatlingTest extends Simulation {
         .check(status.is(200)))
         .pause(10)
         .repeat(2) {
-            exec(http("Get all people")
-            .get("/vmms/api/people")
+            exec(http("Get all crews")
+            .get("/vmms/api/crews")
             .headers(headers_http_authenticated)
             .check(status.is(200)))
             .pause(10 seconds, 20 seconds)
-            .exec(http("Create new person")
-            .post("/vmms/api/people")
+            .exec(http("Create new crew")
+            .post("/vmms/api/crews")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "name":"SAMPLE_TEXT", "birthday":"2020-01-01T00:00:00.000Z", "deathday":"2020-01-01T00:00:00.000Z", "biography":"SAMPLE_TEXT", "birthplace":"SAMPLE_TEXT", "homepage":"SAMPLE_TEXT", "tmdbId":"0"}""")).asJSON
+            .body(StringBody("""{"id":null, "department":"SAMPLE_TEXT", "job":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
-            .check(headerRegex("Location", "(.*)").saveAs("new_person_url"))).exitHereIfFailed
+            .check(headerRegex("Location", "(.*)").saveAs("new_crew_url"))).exitHereIfFailed
             .pause(10)
             .repeat(5) {
-                exec(http("Get created person")
-                .get("/vmms${new_person_url}")
+                exec(http("Get created crew")
+                .get("/vmms${new_crew_url}")
                 .headers(headers_http_authenticated))
                 .pause(10)
             }
-            .exec(http("Delete created person")
-            .delete("/vmms${new_person_url}")
+            .exec(http("Delete created crew")
+            .delete("/vmms${new_crew_url}")
             .headers(headers_http_authenticated))
             .pause(10)
         }

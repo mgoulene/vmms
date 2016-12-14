@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Mapper for the entity Movie and its DTO MovieDTO.
  */
-@Mapper(componentModel = "spring", uses = {ActorMapper.class, PictureMapper.class, })
+@Mapper(componentModel = "spring", uses = {ActorMapper.class, CrewMapper.class, PictureMapper.class, })
 public interface MovieMapper {
 
     @Mapping(source = "poster.id", target = "posterId")
@@ -51,5 +51,14 @@ public interface MovieMapper {
         Actor actor = new Actor();
         actor.setId(id);
         return actor;
+    }
+
+    default Crew crewFromId(Long id) {
+        if (id == null) {
+            return null;
+        }
+        Crew crew = new Crew();
+        crew.setId(id);
+        return crew;
     }
 }

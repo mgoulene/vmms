@@ -21,17 +21,10 @@ public class MovieDTO implements Serializable {
     @Size(max = 200)
     private String originalTitle;
 
-    private String releaseDate;
-
     @Size(max = 40000)
     private String overview;
 
-    @Size(max = 400)
-    private String homepage;
-
-    private Long budget;
-
-    private Long revenue;
+    private String releaseDate;
 
     private Integer runtime;
 
@@ -41,6 +34,15 @@ public class MovieDTO implements Serializable {
 
     private Integer voteCount;
 
+    @Size(max = 400)
+    private String homepage;
+
+    private Long budget;
+
+    private Long revenue;
+
+    private Integer tmdbId;
+
 
     private Long posterId;
     
@@ -49,6 +51,8 @@ public class MovieDTO implements Serializable {
     private Long genreId;
     
     private Set<ActorDTO> actors = new HashSet<>();
+
+    private Set<CrewDTO> crews = new HashSet<>();
 
     private Set<PictureDTO> artworks = new HashSet<>();
 
@@ -73,6 +77,13 @@ public class MovieDTO implements Serializable {
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
     }
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
     public String getReleaseDate() {
         return releaseDate;
     }
@@ -80,12 +91,26 @@ public class MovieDTO implements Serializable {
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
-    public String getOverview() {
-        return overview;
+    public Integer getRuntime() {
+        return runtime;
     }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
+    public void setRuntime(Integer runtime) {
+        this.runtime = runtime;
+    }
+    public Float getVoteRating() {
+        return voteRating;
+    }
+
+    public void setVoteRating(Float voteRating) {
+        this.voteRating = voteRating;
+    }
+    public Integer getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(Integer voteCount) {
+        this.voteCount = voteCount;
     }
     public String getHomepage() {
         return homepage;
@@ -108,26 +133,12 @@ public class MovieDTO implements Serializable {
     public void setRevenue(Long revenue) {
         this.revenue = revenue;
     }
-    public Integer getRuntime() {
-        return runtime;
+    public Integer getTmdbId() {
+        return tmdbId;
     }
 
-    public void setRuntime(Integer runtime) {
-        this.runtime = runtime;
-    }
-    public Float getVoteRating() {
-        return voteRating;
-    }
-
-    public void setVoteRating(Float voteRating) {
-        this.voteRating = voteRating;
-    }
-    public Integer getVoteCount() {
-        return voteCount;
-    }
-
-    public void setVoteCount(Integer voteCount) {
-        this.voteCount = voteCount;
+    public void setTmdbId(Integer tmdbId) {
+        this.tmdbId = tmdbId;
     }
 
     public Long getPosterId() {
@@ -160,6 +171,14 @@ public class MovieDTO implements Serializable {
 
     public void setActors(Set<ActorDTO> actors) {
         this.actors = actors;
+    }
+
+    public Set<CrewDTO> getCrews() {
+        return crews;
+    }
+
+    public void setCrews(Set<CrewDTO> crews) {
+        this.crews = crews;
     }
 
     public Set<PictureDTO> getArtworks() {
@@ -197,14 +216,15 @@ public class MovieDTO implements Serializable {
             "id=" + id +
             ", title='" + title + "'" +
             ", originalTitle='" + originalTitle + "'" +
-            ", releaseDate='" + releaseDate + "'" +
             ", overview='" + overview + "'" +
-            ", homepage='" + homepage + "'" +
-            ", budget='" + budget + "'" +
-            ", revenue='" + revenue + "'" +
+            ", releaseDate='" + releaseDate + "'" +
             ", runtime='" + runtime + "'" +
             ", voteRating='" + voteRating + "'" +
             ", voteCount='" + voteCount + "'" +
+            ", homepage='" + homepage + "'" +
+            ", budget='" + budget + "'" +
+            ", revenue='" + revenue + "'" +
+            ", tmdbId='" + tmdbId + "'" +
             '}';
     }
 }

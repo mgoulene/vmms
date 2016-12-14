@@ -29,7 +29,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class MovieServiceImpl implements MovieService{
 
     private final Logger log = LoggerFactory.getLogger(MovieServiceImpl.class);
-    
+
     @Inject
     private MovieRepository movieRepository;
 
@@ -56,11 +56,11 @@ public class MovieServiceImpl implements MovieService{
 
     /**
      *  Get all the movies.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<MovieDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Movies");
         Page<Movie> result = movieRepository.findAll(pageable);
@@ -73,12 +73,21 @@ public class MovieServiceImpl implements MovieService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public MovieDTO findOne(Long id) {
         log.debug("Request to get Movie : {}", id);
         Movie movie = movieRepository.findOneWithEagerRelationships(id);
         MovieDTO movieDTO = movieMapper.movieToMovieDTO(movie);
         return movieDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public MovieDTO findOneWithTmdbId(int tmdbId) {
+        log.debug("Request to get Movie with tmdbID: {}", tmdbId);
+        Movie movie = movieRepository.findOneByTmdbId(tmdbId);
+        MovieDTO movieDTO = movieMapper.movieToMovieDTO(movie);
+        return movieDTO;
+
     }
 
     /**

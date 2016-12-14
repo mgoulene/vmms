@@ -3,6 +3,14 @@
     "relationships": [
         {
             "relationshipType": "one-to-one",
+            "relationshipName": "profil",
+            "otherEntityName": "picture",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "person"
+        },
+        {
+            "relationshipType": "one-to-one",
             "relationshipName": "profilePicture",
             "otherEntityName": "picture",
             "otherEntityField": "id",
@@ -19,14 +27,6 @@
             ]
         },
         {
-            "fieldName": "biography",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "maxlength"
-            ],
-            "fieldValidateRulesMaxlength": 40000
-        },
-        {
             "fieldName": "birthday",
             "fieldType": "LocalDate"
         },
@@ -35,12 +35,32 @@
             "fieldType": "LocalDate"
         },
         {
+            "fieldName": "biography",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 40000
+        },
+        {
+            "fieldName": "birthplace",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 1000
+        },
+        {
             "fieldName": "homepage",
             "fieldType": "String",
             "fieldValidateRules": [
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": 400
+        },
+        {
+            "fieldName": "tmdbId",
+            "fieldType": "Integer"
         }
     ],
     "changelogDate": "20161210132534",

@@ -27,9 +27,17 @@
         },
         {
             "relationshipType": "many-to-many",
-            "otherEntityRelationshipName": "movieActror",
+            "otherEntityRelationshipName": "movieActor",
             "relationshipName": "actor",
             "otherEntityName": "actor",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "movieCrew",
+            "relationshipName": "crew",
+            "otherEntityName": "crew",
             "otherEntityField": "id",
             "ownerSide": true
         },
@@ -61,16 +69,34 @@
             "fieldValidateRulesMaxlength": 200
         },
         {
-            "fieldName": "releaseDate",
-            "fieldType": "String"
-        },
-        {
             "fieldName": "overview",
             "fieldType": "String",
             "fieldValidateRules": [
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": 40000
+        },
+        {
+            "fieldName": "releaseDate",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "runtime",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "voteRating",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": 0,
+            "fieldValidateRulesMax": 10
+        },
+        {
+            "fieldName": "voteCount",
+            "fieldType": "Integer"
         },
         {
             "fieldName": "homepage",
@@ -89,21 +115,7 @@
             "fieldType": "Long"
         },
         {
-            "fieldName": "runtime",
-            "fieldType": "Integer"
-        },
-        {
-            "fieldName": "voteRating",
-            "fieldType": "Float",
-            "fieldValidateRules": [
-                "min",
-                "max"
-            ],
-            "fieldValidateRulesMin": 0,
-            "fieldValidateRulesMax": 10
-        },
-        {
-            "fieldName": "voteCount",
+            "fieldName": "tmdbId",
             "fieldType": "Integer"
         }
     ],

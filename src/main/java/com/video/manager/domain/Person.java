@@ -29,19 +29,30 @@ public class Person implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Size(max = 40000)
-    @Column(name = "biography", length = 40000)
-    private String biography;
-
     @Column(name = "birthday")
     private LocalDate birthday;
 
     @Column(name = "deathday")
     private LocalDate deathday;
 
+    @Size(max = 40000)
+    @Column(name = "biography", length = 40000)
+    private String biography;
+
+    @Size(max = 1000)
+    @Column(name = "birthplace", length = 1000)
+    private String birthplace;
+
     @Size(max = 400)
     @Column(name = "homepage", length = 400)
     private String homepage;
+
+    @Column(name = "tmdb_id")
+    private Integer tmdbId;
+
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Picture profil;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -66,19 +77,6 @@ public class Person implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getBiography() {
-        return biography;
-    }
-
-    public Person biography(String biography) {
-        this.biography = biography;
-        return this;
-    }
-
-    public void setBiography(String biography) {
-        this.biography = biography;
     }
 
     public LocalDate getBirthday() {
@@ -107,6 +105,32 @@ public class Person implements Serializable {
         this.deathday = deathday;
     }
 
+    public String getBiography() {
+        return biography;
+    }
+
+    public Person biography(String biography) {
+        this.biography = biography;
+        return this;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
+    }
+
+    public String getBirthplace() {
+        return birthplace;
+    }
+
+    public Person birthplace(String birthplace) {
+        this.birthplace = birthplace;
+        return this;
+    }
+
+    public void setBirthplace(String birthplace) {
+        this.birthplace = birthplace;
+    }
+
     public String getHomepage() {
         return homepage;
     }
@@ -118,6 +142,32 @@ public class Person implements Serializable {
 
     public void setHomepage(String homepage) {
         this.homepage = homepage;
+    }
+
+    public Integer getTmdbId() {
+        return tmdbId;
+    }
+
+    public Person tmdbId(Integer tmdbId) {
+        this.tmdbId = tmdbId;
+        return this;
+    }
+
+    public void setTmdbId(Integer tmdbId) {
+        this.tmdbId = tmdbId;
+    }
+
+    public Picture getProfil() {
+        return profil;
+    }
+
+    public Person profil(Picture picture) {
+        this.profil = picture;
+        return this;
+    }
+
+    public void setProfil(Picture picture) {
+        this.profil = picture;
     }
 
     public Picture getProfilePicture() {
@@ -158,10 +208,12 @@ public class Person implements Serializable {
         return "Person{" +
             "id=" + id +
             ", name='" + name + "'" +
-            ", biography='" + biography + "'" +
             ", birthday='" + birthday + "'" +
             ", deathday='" + deathday + "'" +
+            ", biography='" + biography + "'" +
+            ", birthplace='" + birthplace + "'" +
             ", homepage='" + homepage + "'" +
+            ", tmdbId='" + tmdbId + "'" +
             '}';
     }
 }
