@@ -104,7 +104,6 @@ public class MovieServiceImpl implements MovieService{
         Page<Movie> result = movieSearchRepository.search(queryStringQuery(query), pageable);
         return result.map(movie -> movieMapper.movieToMovieDTO(movie));
     }
-
     @Transactional(readOnly = true)
     public MovieDTO findOneByTmdbId(int tmbdId) {
         log.debug("Request to get Movie from TmbdId: {}", tmbdId);
@@ -112,4 +111,5 @@ public class MovieServiceImpl implements MovieService{
         MovieDTO movieDTO = movieMapper.movieToMovieDTO(movie);
         return movieDTO;
     }
+
 }

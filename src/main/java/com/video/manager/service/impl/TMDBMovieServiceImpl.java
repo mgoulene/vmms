@@ -7,6 +7,7 @@ import com.video.manager.service.*;
 import com.video.manager.service.dto.*;
 import com.video.manager.tmdb.TmdbDataLoader;
 import info.movito.themoviedbapi.model.Credits;
+import info.movito.themoviedbapi.model.Genre;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.MovieImages;
 import info.movito.themoviedbapi.model.people.PersonCast;
@@ -46,6 +47,8 @@ public class TMDBMovieServiceImpl implements TMDBMovieService {
     private ActorService actorService;
     @Inject
     private CrewService crewService;
+    @Inject
+    private GenreService genreService;
 
     private DateTimeFormatter longDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private DateTimeFormatter shortDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy");
@@ -85,8 +88,7 @@ public class TMDBMovieServiceImpl implements TMDBMovieService {
             movieDTO.setRuntime(movieDb.getRuntime());
             movieDTO.setVoteCount(movieDb.getVoteCount());
             movieDTO.setVoteRating(movieDb.getVoteAverage());
-            // Need to Add Backdrop
-            Credits credits = TmdbDataLoader.the().getCredits(tmbdId);
+             Credits credits = TmdbDataLoader.the().getCredits(tmbdId);
             for (int i = 0; i < credits.getCast().size(); i++) {
                 PersonCast personCast = credits.getCast().get(i);
                 PersonDTO personDTO = savePersonFromTmdbId(personCast.getId());
@@ -121,6 +123,17 @@ public class TMDBMovieServiceImpl implements TMDBMovieService {
                 PictureDTO artworkPictureDTO = savePictureFromTmdbPath(movieImages.getPosters().get(i).getFilePath(), PictureType.ARTWORK);
                 movieDTO.getArtworks().add(artworkPictureDTO);
             }
+            for (int i = 0; i < movieDb.getGenres().size();i++) {
+                Genre genreDb = movieDb.getGenres().get(i);
+                GenreDTO genreDTO = genreService.findOneByName(genreDb.getName());
+                if (genreDTO == null) {
+                    genreDTO =new GenreDTO();
+                    genreDTO.setName(genreDb.getName());
+                    genreDTO = genreService.save(genreDTO);
+
+                }
+                movieDTO.getGenres().add(genreDTO);
+            }
             System.out.println("Creating Movie : " + movieDb.getTitle());
             result = movieService.save(movieDTO);
         }
@@ -141,6 +154,7 @@ public class TMDBMovieServiceImpl implements TMDBMovieService {
 
     private LocalDate getLocalDate(String date) {
         LocalDate ld = null;
+        date = date.length() == 4 ? date = date+"-01-01":date;
         if (date != null && date != "") {
             try {
                 ld = LocalDate.parse(date, longDateTimeFormatter);

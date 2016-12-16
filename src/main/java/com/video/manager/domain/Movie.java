@@ -75,10 +75,6 @@ public class Movie implements Serializable {
     @JoinColumn(unique = true)
     private Picture backdrop;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private Genre genre;
-
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "movie_actor",
@@ -282,19 +278,6 @@ public class Movie implements Serializable {
 
     public void setBackdrop(Picture picture) {
         this.backdrop = picture;
-    }
-
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public Movie genre(Genre genre) {
-        this.genre = genre;
-        return this;
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
     }
 
     public Set<Actor> getActors() {

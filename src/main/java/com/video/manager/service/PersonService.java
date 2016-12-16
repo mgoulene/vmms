@@ -20,7 +20,7 @@ public interface PersonService {
 
     /**
      *  Get all the people.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
@@ -45,11 +45,12 @@ public interface PersonService {
      * Search for the person corresponding to the query.
      *
      *  @param query the query of the search
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
     Page<PersonDTO> search(String query, Pageable pageable);
 
     PersonDTO findOneByTmdbId(int personTmdbId);
+
 }

@@ -80,7 +80,19 @@ public class GenreServiceImpl implements GenreService{
         GenreDTO genreDTO = genreMapper.genreToGenreDTO(genre);
         return genreDTO;
     }
-
+    /**
+     *  Get one genre by name.
+     *
+     *  @param name the name of the entity
+     *  @return the entity
+     */
+    @Transactional(readOnly = true)
+    public GenreDTO findOneByName(String name) {
+        log.debug("Request to get Genre by name: {}", name);
+        Genre genre = genreRepository.findOneByName(name);
+        GenreDTO genreDTO = genreMapper.genreToGenreDTO(genre);
+        return genreDTO;
+    }
 
 
     /**

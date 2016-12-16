@@ -5,7 +5,7 @@
         {
             "fieldName": "type",
             "fieldType": "PictureType",
-            "fieldValues": "POSTER_MOVIE,ARTWORK,PEOPLE",
+            "fieldValues": "POSTER_MOVIE,ARTWORK,PEOPLE,BACKDROP_MOVIE",
             "fieldValidateRules": [
                 "required"
             ]

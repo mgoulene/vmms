@@ -20,12 +20,6 @@
                                  referencedColumnNames="id"
                                  referencedTableName="picture"/>
 
-        <addForeignKeyConstraint baseColumnNames="genre_id"
-                                 baseTableName="movie"
-                                 constraintName="fk_movie_genre_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="genre"/>
-
         <addForeignKeyConstraint baseColumnNames="movies_id"
                                  baseTableName="movie_actor"
                                  constraintName="fk_movie_actor_movies_id"

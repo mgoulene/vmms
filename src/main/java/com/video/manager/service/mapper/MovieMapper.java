@@ -14,14 +14,12 @@ public interface MovieMapper {
 
     @Mapping(source = "poster.id", target = "posterId")
     @Mapping(source = "backdrop.id", target = "backdropId")
-    @Mapping(source = "genre.id", target = "genreId")
     MovieDTO movieToMovieDTO(Movie movie);
 
     List<MovieDTO> moviesToMovieDTOs(List<Movie> movies);
 
     @Mapping(source = "posterId", target = "poster")
     @Mapping(source = "backdropId", target = "backdrop")
-    @Mapping(source = "genreId", target = "genre")
     Movie movieDTOToMovie(MovieDTO movieDTO);
 
     List<Movie> movieDTOsToMovies(List<MovieDTO> movieDTOs);
@@ -33,15 +31,6 @@ public interface MovieMapper {
         Picture picture = new Picture();
         picture.setId(id);
         return picture;
-    }
-
-    default Genre genreFromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        Genre genre = new Genre();
-        genre.setId(id);
-        return genre;
     }
 
     default Actor actorFromId(Long id) {
@@ -60,5 +49,14 @@ public interface MovieMapper {
         Crew crew = new Crew();
         crew.setId(id);
         return crew;
+    }
+
+    default Genre genreFromId(Long id) {
+        if (id == null) {
+            return null;
+        }
+        Genre genre = new Genre();
+        genre.setId(id);
+        return genre;
     }
 }

@@ -12,4 +12,5 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface GenreRepository extends JpaRepository<Genre,Long> {
 
+    Genre findOneByName(String name);
 }

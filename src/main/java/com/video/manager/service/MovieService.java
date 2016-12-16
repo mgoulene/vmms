@@ -52,4 +52,5 @@ public interface MovieService {
     Page<MovieDTO> search(String query, Pageable pageable);
 
     MovieDTO findOneByTmdbId(int tmbdId);
+
 }

@@ -50,5 +50,5 @@ public interface GenreService {
      *  @return the list of entities
      */
     Page<GenreDTO> search(String query, Pageable pageable);
-
+    public GenreDTO findOneByName(String name);
 }

@@ -49,8 +49,6 @@ public class MovieDTO implements Serializable {
     
     private Long backdropId;
     
-    private Long genreId;
-    
     private Set<ActorDTO> actors = new HashSet<>();
 
     private Set<CrewDTO> crews = new HashSet<>();
@@ -158,14 +156,6 @@ public class MovieDTO implements Serializable {
 
     public void setBackdropId(Long pictureId) {
         this.backdropId = pictureId;
-    }
-
-    public Long getGenreId() {
-        return genreId;
-    }
-
-    public void setGenreId(Long genreId) {
-        this.genreId = genreId;
     }
 
     public Set<ActorDTO> getActors() {
