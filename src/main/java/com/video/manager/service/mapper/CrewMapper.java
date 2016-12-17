@@ -13,6 +13,8 @@ import java.util.List;
 public interface CrewMapper {
 
     @Mapping(source = "person.id", target = "personId")
+    @Mapping(source = "person.name", target = "personName")
+    @Mapping(source = "person.profilePicture.id", target="personProfilePictureId")
     CrewDTO crewToCrewDTO(Crew crew);
 
     List<CrewDTO> crewsToCrewDTOs(List<Crew> crews);

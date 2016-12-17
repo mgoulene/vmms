@@ -8,9 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A Movie.
@@ -80,7 +78,8 @@ public class Movie implements Serializable {
     @JoinTable(name = "movie_actor",
                joinColumns = @JoinColumn(name="movies_id", referencedColumnName="ID"),
                inverseJoinColumns = @JoinColumn(name="actors_id", referencedColumnName="ID"))
-    private Set<Actor> actors = new HashSet<>();
+    @OrderBy("actorOrder")
+    private List<Actor> actors = new LinkedList<>();
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -280,11 +279,11 @@ public class Movie implements Serializable {
         this.backdrop = picture;
     }
 
-    public Set<Actor> getActors() {
+    public List<Actor> getActors() {
         return actors;
     }
 
-    public Movie actors(Set<Actor> actors) {
+    public Movie actors(List<Actor> actors) {
         this.actors = actors;
         return this;
     }
@@ -301,7 +300,7 @@ public class Movie implements Serializable {
         return this;
     }
 
-    public void setActors(Set<Actor> actors) {
+    public void setActors(List<Actor> actors) {
         this.actors = actors;
     }
 

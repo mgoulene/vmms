@@ -17,9 +17,13 @@ public class CrewDTO implements Serializable {
 
     private String job;
 
+    private String personName;
+
+    private Long personProfilePictureId;
+
 
     private Long personId;
-    
+
     public Long getId() {
         return id;
     }
@@ -78,5 +82,21 @@ public class CrewDTO implements Serializable {
             ", department='" + department + "'" +
             ", job='" + job + "'" +
             '}';
+    }
+
+    public String getPersonName() {
+        return personName;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
+
+    public Long getPersonProfilePictureId() {
+        return personProfilePictureId;
+    }
+
+    public void setPersonProfilePictureId(Long personProfilePictureId) {
+        this.personProfilePictureId = personProfilePictureId;
     }
 }

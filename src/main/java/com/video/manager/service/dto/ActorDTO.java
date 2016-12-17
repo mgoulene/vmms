@@ -1,5 +1,7 @@
 package com.video.manager.service.dto;
 
+import com.video.manager.domain.Person;
+
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -21,7 +23,11 @@ public class ActorDTO implements Serializable {
 
 
     private Long personId;
-    
+
+    private String personName;
+
+    private Long personProfilePictureId;
+
     public Long getId() {
         return id;
     }
@@ -80,5 +86,21 @@ public class ActorDTO implements Serializable {
             ", actorOrder='" + actorOrder + "'" +
             ", actorCharacter='" + actorCharacter + "'" +
             '}';
+    }
+
+    public String getPersonName() {
+        return personName;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
+
+    public Long getPersonProfilePictureId() {
+        return personProfilePictureId;
+    }
+
+    public void setPersonProfilePictureId(Long personProfilePictureId) {
+        this.personProfilePictureId = personProfilePictureId;
     }
 }

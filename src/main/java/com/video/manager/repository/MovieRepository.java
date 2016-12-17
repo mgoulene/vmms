@@ -16,7 +16,8 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     @Query("select distinct movie from Movie movie left join fetch movie.actors left join fetch movie.crews left join fetch movie.artworks left join fetch movie.genres")
     List<Movie> findAllWithEagerRelationships();
 
-    @Query("select movie from Movie movie left join fetch movie.actors left join fetch movie.crews left join fetch movie.artworks left join fetch movie.genres where movie.id =:id")
+    // TODO : select movie from Movie movie left join fetch movie.actors actor left join fetch actor.person left join fetch movie.crews left join fetch movie.artworks left join fetch movie.genres where movie.id =:id
+    @Query("select movie from Movie movie left join fetch movie.actors movieActor left join fetch movieActor.person left join fetch movie.crews movieCrew left join fetch movieCrew.person left join fetch movie.genres where movie.id =:id")
     Movie findOneWithEagerRelationships(@Param("id") Long id);
     Movie findOneByTmdbId(int tmbdId);
 
